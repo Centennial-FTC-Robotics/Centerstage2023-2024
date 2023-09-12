@@ -6,7 +6,7 @@ import org.centennialrobotics.Subsystem;
 
 public class Intake extends Subsystem {
 
-    public void initialize(LinearOpMode opmode) {
+    public void init(LinearOpMode opmode) {
 
     }
 

@@ -5,6 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public abstract class Subsystem {
 
-    public abstract void initialize(LinearOpMode opmode);
+    public Robot robot;
+
+    public void preInit(LinearOpMode opmode, Robot robot) {
+        this.robot = robot;
+        init(opmode);
+    }
+
+    public void update() {}
+
+    public abstract void init(LinearOpMode opmode);
 
 }
