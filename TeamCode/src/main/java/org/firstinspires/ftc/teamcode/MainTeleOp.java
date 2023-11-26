@@ -17,6 +17,7 @@ public class MainTeleOp extends LinearOpMode {
         while(opModeIsActive()){
             robot.teleOpUpdate(gamepad1, gamepad2);
             telemetry.update();
+
         }
     }
 }
