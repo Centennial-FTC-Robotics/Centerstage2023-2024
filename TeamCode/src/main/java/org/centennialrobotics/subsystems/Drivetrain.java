@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.centennialrobotics.Subsystem;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -55,6 +56,14 @@ public class Drivetrain extends Subsystem {
         }
     }
 
+    public void teleOpUpdate(Gamepad gamepad1, Gamepad gamepad2){
+        drivebase.driveRobotCentric(
+                (gamepad1.left_stick_x),
+                (gamepad1.left_stick_y),
+                (gamepad1.right_stick_x),
+                false
+        );
+    }
 
 
 }

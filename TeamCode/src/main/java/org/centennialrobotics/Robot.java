@@ -1,6 +1,7 @@
 package org.centennialrobotics;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.centennialrobotics.subsystems.Drivetrain;
 import org.centennialrobotics.subsystems.IMU;
@@ -24,6 +25,15 @@ public class Robot {
             subsystem.preInit(opmode, this);
         }
 
+
+    }
+
+    public void teleOpUpdate(Gamepad gamepad1, Gamepad gamepad2) throws InterruptedException {
+        //for(Subsystem subsystem : subsystems) {
+        //    if(subsystem.active()) {
+        drivetrain.teleOpUpdate(gamepad1, gamepad2);
+        //    }
+        //}
     }
 
 }
