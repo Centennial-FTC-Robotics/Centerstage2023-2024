@@ -16,24 +16,28 @@ import javax.imageio.ImageIO;
 
 public class MeepMeepVisualization {
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(500);
+        MeepMeep meepMeep = new MeepMeep(700);
+
+        double tile = 23.75;
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 16)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-36, 60, -Math.PI/2))
-                                .lineToSplineHeading(new Pose2d(-36, 12, Math.PI/2))
+                        drive.trajectorySequenceBuilder(new Pose2d(-1.5*tile, 2.5*tile, 3*Math.PI/2))
+                                .lineToSplineHeading(new Pose2d(-1.5*tile, 1.25*tile, 0))
                                 .waitSeconds(1)
-                                .lineToSplineHeading(new Pose2d(24, 12, 0))
-                                .splineToConstantHeading(new Vector2d(48, 32), 0)
+                                .lineToConstantHeading(new Vector2d(-35, 3))
+                                .lineToConstantHeading(new Vector2d(18, 3))
+                                .splineTo(new Vector2d(48, 36), 0)
                                 .build()
                 );
 
         try {
-            BufferedImage image = ImageIO.read(new URL("https://i.imgur.com/g9GR5fM.png"));
+            BufferedImage image = ImageIO.read(new URL("https://i.imgur.com/EOT4Pcj.png"));
             meepMeep.setBackground(image)
-                    .setDarkMode(true)
+//            meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
+                    .setDarkMode(false)
                     .addEntity(myBot)
                     .start();
         } catch (IOException e) {
