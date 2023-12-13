@@ -27,16 +27,20 @@ public class IntakeTest extends LinearOpMode {
         CRServo wheel = hardwareMap.get(CRServo.class, "wheel");
 
         GamepadEx gamepad = new GamepadEx(gamepad1);
-        ToggleButtonReader aToggle = new ToggleButtonReader(gamepad, GamepadKeys.Button.A);
+
+        boolean aToggle = false;
 
         waitForStart();
         double held = 0;
         while(opModeIsActive()) {
-            aToggle.readValue();
             gamepad.readButtons();
             double motorPower = gamepad1.left_stick_y;
 
-            if(aToggle.getState()) {
+            if(gamepad.wasJustPressed(GamepadKeys.Button.A)) {
+                aToggle = !aToggle;
+            }
+
+            if(aToggle) {
                 if(gamepad.wasJustPressed(GamepadKeys.Button.A)) {
                     held = motorPower;
                 }
