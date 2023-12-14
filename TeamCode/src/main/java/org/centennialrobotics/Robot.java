@@ -3,6 +3,7 @@ package org.centennialrobotics;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.centennialrobotics.subsystems.Climber;
 import org.centennialrobotics.subsystems.Drivetrain;
 import org.centennialrobotics.subsystems.IMU;
 import org.centennialrobotics.subsystems.Intake;
@@ -14,9 +15,10 @@ public class Robot {
     public Outtake outtake = new Outtake();
     public Intake intake = new Intake();
     public IMU imu = new IMU();
+    public Climber climber = new Climber();
 
     public Subsystem[] subsystems = new Subsystem[] {
-        drivetrain, outtake, intake, imu
+        drivetrain, outtake, intake, imu, climber
     };
 
     public void initialize(LinearOpMode opmode) {
@@ -26,14 +28,6 @@ public class Robot {
         }
 
 
-    }
-
-    public void teleOpUpdate(Gamepad gamepad1, Gamepad gamepad2) throws InterruptedException {
-        //for(Subsystem subsystem : subsystems) {
-        //    if(subsystem.active()) {
-        drivetrain.teleOpUpdate(gamepad1, gamepad2);
-        //    }
-        //}
     }
 
 }

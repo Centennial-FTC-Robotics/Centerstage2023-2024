@@ -10,13 +10,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.centennialrobotics.Subsystem;
 
-
+@Config
 public class Intake extends Subsystem {
 
-    public static double intakeDown = 1;
-    public static double intakeUp= 0;
-
-    public static double motorPower = 1;
+    public static double intakePower = 0.6;
 
     public DcMotorEx noodleMotor;
     // Left/Right when you consider slides to be front of robot
@@ -26,23 +23,30 @@ public class Intake extends Subsystem {
 
         noodleMotor = opmode.hardwareMap.get(DcMotorEx.class, "noodleMotor");
         noodleMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        noodleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // noodleMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        noodleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+         noodleMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
-        intakeLift = opmode.hardwareMap.get(Servo.class, "intakeLift");
+        intakeLift = opmode.hardwareMap.get(Servo.class, "leftIntake");
+        intakeLift.setDirection(Servo.Direction.REVERSE);
 
         setHeight(0);
 
     }
 
+    public void expelOne() throws InterruptedException {
+        noodleMotor.setPower(-0.15);
+        Thread.sleep(1000);
+        noodleMotor.setPower(0);
+    }
+
     public int cycleNoodles() {
         double currentPower = noodleMotor.getPower();
         if(currentPower > 0.1) {
-            currentPower = -1*motorPower;
+            currentPower = -1*intakePower;
         } else if(currentPower < -0.1) {
             currentPower = 0;
         } else {
-            currentPower = 1*motorPower;
+            currentPower = 1*intakePower;
         }
 
         noodleMotor.setPower(currentPower);
@@ -54,7 +58,7 @@ public class Intake extends Subsystem {
 
         height = Range.clip(height, 0, 1);
 
-        intakeLift.setPosition(intakeDown + (intakeUp-intakeDown) * height);
+        intakeLift.setPosition(height);
 
     }
 

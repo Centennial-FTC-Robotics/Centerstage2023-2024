@@ -12,83 +12,108 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.centennialrobotics.Subsystem;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Config
 public class Outtake extends Subsystem {
 
-    public static double P = 0;
-    public static double I = 0;
-    public static double D = 0;
-    public static double F = 0;
+    public static double slideP = 0.005;
+    public static double slideF = 0.1;
 
-    public static int bottomOffset = 50;
+    public static double pivotHeight = 300;
 
-    public static double outtakeLL = 0;
-    public static double outtakeLH = 1;
-    public static double outtakeRL = 0;
-    public static double outtakeRH = 1;
+    public static double pivotFlat = 0.35;
+    public static double pivotUp = 0.65;
 
-    public static int slidesTarget = 0;
+    public int slidesTarget = -10;
+
+    public static int wheelOutDir = 1;
 
     public DcMotorEx slideMotorL;
     public DcMotorEx slideMotorR;
 
-    public Servo armL;
-    public Servo armR;
+    public Servo arm;
 
     public CRServo wheel;
 
-    public PIDFController pidfController;
+    private int[] targets = {-10, 350, 450, 650};
+
+    private LinearOpMode opmode;
 
     public void init(LinearOpMode opmode) {
+        this.opmode = opmode;
+        arm = opmode.hardwareMap.get(Servo.class, "outtakeServoL");
+
+        setArm(false);
 
         slideMotorL = opmode.hardwareMap.get(DcMotorEx.class, "slideMotorL");
         slideMotorR = opmode.hardwareMap.get(DcMotorEx.class, "slideMotorR");
 
+        slideMotorR.setDirection(DcMotorEx.Direction.REVERSE);
+
         slideMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         slideMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        while(slideMotorR.getCurrent(CurrentUnit.AMPS) < 3 && opmode.opModeInInit()) {
+            slideMotorR.setPower(-0.4);
+            slideMotorL.setPower(-0.4);
+        }
+        slideMotorR.setPower(0);
+        slideMotorL.setPower(0);
+
+        slideMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         slideMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        slideMotorL.setDirection(DcMotorEx.Direction.REVERSE);
 
-        pidfController = new PIDFController(P, I, D, F);
 
-        armL = opmode.hardwareMap.get(Servo.class, "outtakeServoL");
-        armR = opmode.hardwareMap.get(Servo.class, "outtakeServoR");
+        wheel = opmode.hardwareMap.get(CRServo.class, "wheel");
 
-        setArm(0);
+    }
 
-        wheel = opmode.hardwareMap.get(CRServo.class, "outtakeWheel");
+    public void incrementSlidePos(int inc) {
+        for(int i = 0; i < targets.length; i++) {
+            if(targets[i] == slidesTarget) {
+                slidesTarget = targets[Range.clip((i+inc), 0, targets.length-1)];
+                break;
+            }
+        }
+    }
 
+    public void retractSlides() {
+        slidesTarget = -10;
     }
 
     public void setWheel(double power) {
         wheel.setPower(power);
     }
 
-    public void setArm(double amt) {
-        amt = Range.clip(amt, 0, 1);
-
-        armL.setPosition(outtakeLL + (outtakeLH-outtakeLL) * amt);
-        armR.setPosition(outtakeRL + (outtakeRH-outtakeRL) * amt);
+    public void setArm(boolean out) {
+        if(out) {
+            arm.setPosition(pivotUp);
+        } else {
+            arm.setPosition(pivotFlat);
+        }
     }
 
 
     public void update() {
-        pidfController.setPIDF(P, I, D, F);
 
-        int pos = slideMotorL.getCurrentPosition();
+        int pos = -slideMotorR.getCurrentPosition();
+        opmode.telemetry.addData("pos", pos);
+        opmode.telemetry.addData("target", slidesTarget);
+        double error = slidesTarget - pos;
 
-        if(pos < bottomOffset) {
-            pidfController.setF(0);
-        }
-
-        double power = pidfController.calculate(pos, slidesTarget);
+        double power = Range.clip(error*slideP + slideF, -.25, 1);
+        opmode.telemetry.addData("power", power);
+        opmode.telemetry.update();
 
         slideMotorL.setPower(power);
         slideMotorR.setPower(power);
+
+        setArm(pos > pivotHeight && slidesTarget > pivotHeight);
     }
 
 }

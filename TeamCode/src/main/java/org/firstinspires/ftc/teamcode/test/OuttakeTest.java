@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.test;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -44,7 +44,7 @@ public class OuttakeTest extends LinearOpMode {
             int pos = -slideR.getCurrentPosition();
             double error = target - pos;
 
-            double power = Range.clip(error*P + F, -.2, 1);
+            double power = Range.clip(error*P + F, -.25, 1);
 
             slideL.setPower(power);
             slideR.setPower(power);
