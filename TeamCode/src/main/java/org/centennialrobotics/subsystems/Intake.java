@@ -39,6 +39,10 @@ public class Intake extends Subsystem {
         noodleMotor.setPower(0);
     }
 
+    public void setNoodlePower(double power) {
+        noodleMotor.setPower(Range.clip(power, -1, 1));
+    }
+
     public int cycleNoodles() {
         double currentPower = noodleMotor.getPower();
         if(currentPower > 0.1) {

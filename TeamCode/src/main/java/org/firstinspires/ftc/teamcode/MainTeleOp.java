@@ -30,7 +30,7 @@ public class MainTeleOp extends LinearOpMode {
             toolPad.readButtons();
 
             robot.drivetrain.drive(
-                    -drivePad.getLeftY(),
+                    drivePad.getLeftY(),
                     drivePad.getLeftX(),
                     drivePad.getRightX(),
                     false

@@ -24,6 +24,10 @@ public class Drivetrain extends Subsystem {
     // update this at the end of auto to transfer the pose to teleop
     public static Pose2d currentPose = new Pose2d();
 
+    public Motor.Encoder parallelLeft;
+    public Motor.Encoder parallelRight;
+    public Motor.Encoder perpendicularBack;
+
     public void init(LinearOpMode opmode) {
 
         Motor frontLeft =
@@ -42,9 +46,28 @@ public class Drivetrain extends Subsystem {
 
         drivebase = new MecanumDrive(frontLeft, frontRight, backLeft, backRight);
 
+        // change these and REVERSE some of them if necessary
+        parallelLeft = frontRight.encoder; //1
+        parallelRight = backRight.encoder; //3
+        perpendicularBack = backLeft.encoder;//2
+
+        parallelRight.setDirection(Motor.Direction.REVERSE);
+        parallelLeft.setDirection(Motor.Direction.REVERSE);
+        perpendicularBack.setDirection(Motor.Direction.REVERSE);
+
+        resetEncoders();
+
 //        /////////// add the localizer here once encoders are set up
 //        localizer = new StandardTrackingWheelLocalizer(opmode.hardwareMap, );
 
+    }
+
+    public int inchesToTicks(double inches) {
+        return (int)(8192*inches/(Math.PI*1.5));
+    }
+
+    public double ticksToInches(int ticks) {
+        return (ticks/8192.)*(Math.PI*1.5);
     }
 
     public void drive(double forward, double strafe, double turn, boolean fieldCentric) {
@@ -56,14 +79,18 @@ public class Drivetrain extends Subsystem {
         }
     }
 
-    public void teleOpUpdate(Gamepad gamepad1, Gamepad gamepad2){
-        drivebase.driveRobotCentric(
-                (gamepad1.left_stick_x),
-                (gamepad1.left_stick_y),
-                (gamepad1.right_stick_x),
-                false
-        );
+    public void resetEncoders() {
+        parallelLeft.reset();
+        parallelRight.reset();
+        perpendicularBack.reset();
     }
 
+    public int[] getEncoderTicks() {
+        return new int[]{
+                parallelLeft.getPosition(),
+                parallelRight.getPosition(),
+                perpendicularBack.getPosition()
+        };
+    }
 
 }

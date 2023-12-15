@@ -102,13 +102,9 @@ public class Outtake extends Subsystem {
     public void update() {
 
         int pos = -slideMotorR.getCurrentPosition();
-        opmode.telemetry.addData("pos", pos);
-        opmode.telemetry.addData("target", slidesTarget);
         double error = slidesTarget - pos;
 
         double power = Range.clip(error*slideP + slideF, -.25, 1);
-        opmode.telemetry.addData("power", power);
-        opmode.telemetry.update();
 
         slideMotorL.setPower(power);
         slideMotorR.setPower(power);

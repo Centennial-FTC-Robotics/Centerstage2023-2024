@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.centennialrobotics.Robot;
 
 @Autonomous
-public class AutoTest extends LinearOpMode {
+public class AutoToolTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 

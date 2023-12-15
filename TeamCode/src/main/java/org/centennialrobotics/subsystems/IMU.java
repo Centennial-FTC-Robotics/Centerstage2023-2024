@@ -10,7 +10,9 @@ public class IMU extends Subsystem {
     public RevIMU revIMU;
 
     public void init(LinearOpMode opmode) {
+
         revIMU = new RevIMU(opmode.hardwareMap);
+        revIMU.init();
     }
 
 }
