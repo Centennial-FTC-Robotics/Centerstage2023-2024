@@ -8,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
 
+
+
 public class Camera extends Subsystem {
 
     double minArea = 100;
@@ -16,8 +18,8 @@ public class Camera extends Subsystem {
     Scalar blueH = new Scalar(120, 255, 255);
 
 
-    Scalar redL = new Scalar(75, 50, 0);
-    Scalar redH = new Scalar(120, 255, 255);
+    Scalar redL = new Scalar(0, 155, 0);
+    Scalar redH = new Scalar(35, 255, 255);
 
     Scalar low;
     Scalar high;

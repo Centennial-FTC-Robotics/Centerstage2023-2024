@@ -25,19 +25,19 @@ public class AutoBlueBackstage extends LinearOpMode {
             robot.drivetrain.turnToHeading(90);
             robot.drivetrain.driveDistance(-22);
             robot.intake.expelOne();
-            robot.drivetrain.strafeDistance(9.5);
+            robot.drivetrain.strafeDistance(13.5);
         } else if(pos == ElementProcessor.PropPositions.RIGHT) {
             robot.drivetrain.driveDistance(27);
             robot.drivetrain.turnToHeading(90);
             robot.intake.expelOne();
-            robot.drivetrain.strafeDistance(-5.5);
+            robot.drivetrain.strafeDistance(-1.5);
             robot.drivetrain.driveDistance(-26);
 //            robot.drivetrain.strafeDistance(-22);
         } else if(pos == ElementProcessor.PropPositions.MIDDLE){
             robot.drivetrain.driveDistance(35);
             robot.drivetrain.driveDistance(-10);
             robot.intake.expelOne();
-            robot.drivetrain.driveDistance(-4);
+//            robot.drivetrain.driveDistance(-4);
             robot.drivetrain.turnToHeading(90);
             robot.drivetrain.driveDistance(-26);
 
