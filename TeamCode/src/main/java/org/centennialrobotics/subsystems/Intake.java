@@ -34,12 +34,13 @@ public class Intake extends Subsystem {
     }
 
     public void expelOne() throws InterruptedException {
-        noodleMotor.setPower(-0.15);
+        noodleMotor.setPower(-0.2);
         Thread.sleep(1000);
         noodleMotor.setPower(0);
     }
 
     public void setNoodlePower(double power) {
+
         noodleMotor.setPower(Range.clip(power, -1, 1));
     }
 

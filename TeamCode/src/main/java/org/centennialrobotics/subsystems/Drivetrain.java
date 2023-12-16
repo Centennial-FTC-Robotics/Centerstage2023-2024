@@ -1,17 +1,25 @@
 package org.centennialrobotics.subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.util.Range;
 
 import org.centennialrobotics.Subsystem;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.StandardTrackingWheelLocalizer;
 
 import java.util.List;
 
+@Config
 public class Drivetrain extends Subsystem {
 
     public final double DRIVE_MOTOR_RPM = 340;
@@ -28,7 +36,15 @@ public class Drivetrain extends Subsystem {
     public Motor.Encoder parallelRight;
     public Motor.Encoder perpendicularBack;
 
+    public LinearOpMode opmode;
+
+    public double targetHeading = 0;
+
+    public static double headingP = 0.05;
+    public static double headingLimit = 0.4;
+
     public void init(LinearOpMode opmode) {
+        this.opmode = opmode;
 
         Motor frontLeft =
                 new Motor(opmode.hardwareMap, "frontLeft", DRIVE_MOTOR_CPR, DRIVE_MOTOR_RPM);
@@ -38,6 +54,11 @@ public class Drivetrain extends Subsystem {
                 new Motor(opmode.hardwareMap, "backLeft", DRIVE_MOTOR_CPR, DRIVE_MOTOR_RPM);
         Motor backRight =
                 new Motor(opmode.hardwareMap, "backRight", DRIVE_MOTOR_CPR, DRIVE_MOTOR_RPM);
+
+        frontLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         frontLeft.setRunMode(Motor.RunMode.RawPower);
         frontRight.setRunMode(Motor.RunMode.RawPower);
@@ -61,6 +82,121 @@ public class Drivetrain extends Subsystem {
 //        localizer = new StandardTrackingWheelLocalizer(opmode.hardwareMap, );
 
     }
+
+    public void strafeDistance(double distanceInch) {
+        resetEncoders();
+
+        double driveP = 0.0001;
+//        double headingP = 0.3;
+
+
+        int targetDist = inchesToTicks(distanceInch);
+
+        int currentPos = getEncoderTicks()[2];
+        int error = targetDist - currentPos;
+
+        long lastTime = System.currentTimeMillis();
+        int lastPos = currentPos;
+
+        Telemetry tel = FtcDashboard.getInstance().getTelemetry();
+
+        while(opmode.opModeIsActive() && (Math.abs(error) > 500 ||
+                Math.abs((currentPos-lastPos)/(System.currentTimeMillis()-lastTime)) > 0.00001)) {
+
+            lastTime = System.currentTimeMillis();
+            lastPos = currentPos;
+
+            currentPos = getEncoderTicks()[2];
+            error = targetDist - currentPos;
+
+            double drivePower = Range.clip(error*driveP, -.4, .4);
+
+            double currentAngle = robot.imu.revIMU.getHeading();
+            double turnError = currentAngle - targetHeading;
+
+            double turnPower = Range.clip(turnError*headingP, -headingLimit, headingLimit);
+
+            tel.addData("current", currentPos);
+            tel.addData("target", targetDist);
+            tel.update();
+
+            drive(0, drivePower, turnPower, false);
+        }
+    }
+
+    public void driveDistance(double distanceInch) {
+
+        resetEncoders();
+
+        double driveP = 0.0001;
+//        double headingP = 0.3;
+
+
+        int targetDist = inchesToTicks(distanceInch);
+
+        int currentPos = getEncoderTicks()[0];
+        int error = targetDist - currentPos;
+
+        long lastTime = System.currentTimeMillis();
+        int lastPos = currentPos;
+
+        Telemetry tel = FtcDashboard.getInstance().getTelemetry();
+
+        while(opmode.opModeIsActive() && (Math.abs(error) > 500 ||
+                Math.abs((currentPos-lastPos)/(System.currentTimeMillis()-lastTime)) > 0.00001)) {
+
+            lastTime = System.currentTimeMillis();
+            lastPos = currentPos;
+
+            currentPos = getEncoderTicks()[0];
+            error = targetDist - currentPos;
+
+            double drivePower = Range.clip(error*driveP, -.4, .4);
+
+            double currentAngle = robot.imu.revIMU.getHeading();
+            double turnError = currentAngle - targetHeading;
+
+            double turnPower = Range.clip(turnError*headingP, -headingLimit, headingLimit);
+
+            tel.addData("current", currentPos);
+            tel.addData("target", targetDist);
+            tel.update();
+
+            drive(drivePower, 0, turnPower, true);
+        }
+
+    }
+
+
+
+    public void turnToHeading(double heading) {
+
+        targetHeading = heading;
+
+        double P = 0.03;
+
+        double currentHeading = robot.imu.revIMU.getHeading();
+        double error = currentHeading - targetHeading;
+
+        double lastHeading = currentHeading;
+        long lastTime = System.currentTimeMillis();
+
+        while(opmode.opModeIsActive() && (Math.abs(error) > 1.5 ||
+                Math.abs((currentHeading-lastHeading)/(System.currentTimeMillis()-lastTime)) > 0.0005)) {
+            lastHeading = currentHeading;
+            lastTime = System.currentTimeMillis();
+
+            currentHeading = robot.imu.revIMU.getHeading();
+            error = currentHeading - targetHeading;
+
+            double power = Range.clip(error*P, -0.5, 0.5);
+            drive(0, 0, power, false);
+
+        }
+
+    }
+
+
 
     public int inchesToTicks(double inches) {
         return (int)(8192*inches/(Math.PI*1.5));

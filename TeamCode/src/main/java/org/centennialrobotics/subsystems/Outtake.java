@@ -20,10 +20,10 @@ public class Outtake extends Subsystem {
     public static double slideP = 0.005;
     public static double slideF = 0.1;
 
-    public static double pivotHeight = 300;
+    public static double pivotHeight = 150;
 
-    public static double pivotFlat = 0.35;
-    public static double pivotUp = 0.65;
+    public static double pivotFlat = 0.38;
+    public static double pivotUp = 0.7;
 
     public int slidesTarget = -10;
 
@@ -36,7 +36,7 @@ public class Outtake extends Subsystem {
 
     public CRServo wheel;
 
-    private int[] targets = {-10, 350, 450, 650};
+    private int[] targets = {-10, 400, 470, 570, 650};
 
     private LinearOpMode opmode;
 

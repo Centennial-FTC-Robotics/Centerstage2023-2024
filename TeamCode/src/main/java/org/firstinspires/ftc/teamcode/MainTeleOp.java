@@ -40,9 +40,11 @@ public class MainTeleOp extends LinearOpMode {
             robot.intake.setHeight(toolPad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 //            robot.outtake.setArm(toolPad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
-            if(toolPad.wasJustPressed(GamepadKeys.Button.A)) {
-                newPower = robot.intake.cycleNoodles();
-            }
+//            if(toolPad.wasJustPressed(GamepadKeys.Button.A)) {
+//                newPower = robot.intake.cycleNoodles();
+//            }
+
+            robot.intake.setNoodlePower(toolPad.getLeftY());
 
             if(toolPad.isDown(GamepadKeys.Button.B)) {
                 robot.outtake.setWheel(Outtake.wheelOutDir);

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+import org.centennialrobotics.Robot;
 import org.centennialrobotics.subsystems.Drivetrain;
 import org.centennialrobotics.subsystems.IMU;
 
@@ -26,7 +27,17 @@ public class LineTest extends LinearOpMode {
     public static boolean strafe = false;
 
 
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException{
+
+        Robot robot = new Robot();
+        robot.initialize(this);
+
+        waitForStart();
+        robot.drivetrain.driveDistance(targetPos);
+
+    }
+
+    public void OtherrunOpMode() throws InterruptedException {
         IMU imu = new IMU();
         Drivetrain dt = new Drivetrain();
         imu.init(this);
