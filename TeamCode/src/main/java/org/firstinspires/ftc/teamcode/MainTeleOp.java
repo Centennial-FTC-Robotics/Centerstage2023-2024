@@ -44,7 +44,7 @@ public class MainTeleOp extends LinearOpMode {
 //                newPower = robot.intake.cycleNoodles();
 //            }
 
-            robot.intake.setNoodlePower(toolPad.getLeftY());
+            robot.intake.setNoodlePower(toolPad.getLeftY()*.7);
 
             if(toolPad.isDown(GamepadKeys.Button.B)) {
                 robot.outtake.setWheel(Outtake.wheelOutDir);
@@ -67,14 +67,41 @@ public class MainTeleOp extends LinearOpMode {
                 robot.outtake.retractSlides();
             }
 
-            if(drivePad.wasJustPressed(GamepadKeys.Button.A)) {
-                robot.climber.toggleHang();
+            if(gamepad1.dpad_up) {
+                robot.climber.up();
+            }
+
+            if(gamepad1.dpad_left) {
+                robot.climber.left();
+            }
+
+            if(gamepad1.dpad_right) {
+                robot.climber.right();
+            }
+
+            if(gamepad1.dpad_down) {
+                robot.climber.down();
+            }
+
+            if(gamepad1.a) {
+                robot.climber.setServoEnabled(true);
+            }
+            if(gamepad1.b) {
+                robot.climber.setServoEnabled(false);
+            }
+
+            if(gamepad1.right_bumper) {
+                robot.climber.launcher.setPower(0.2);
+            } else if(gamepad1.left_bumper) {
+                robot.climber.launcher.setPower(-0.2);
+            } else {
+                robot.climber.launcher.setPower(0);
             }
 
             int hangMotorPower = 0;
-            if(drivePad.isDown(GamepadKeys.Button.DPAD_UP)) {
+            if(drivePad.isDown(GamepadKeys.Button.Y)) {
                 hangMotorPower = 1;
-            } else if(drivePad.isDown(GamepadKeys.Button.DPAD_DOWN)) {
+            } else if(drivePad.isDown(GamepadKeys.Button.X)) {
                 hangMotorPower = -1;
             }
             robot.climber.hangMotor.setPower(hangMotorPower);

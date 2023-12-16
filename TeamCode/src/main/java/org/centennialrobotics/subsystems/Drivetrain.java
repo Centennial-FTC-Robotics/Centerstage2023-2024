@@ -86,6 +86,9 @@ public class Drivetrain extends Subsystem {
     public void strafeDistance(double distanceInch) {
         resetEncoders();
 
+        long startTime = System.currentTimeMillis();
+        long timeout = (long)(4000*Math.abs(distanceInch)/24.);
+
         double driveP = 0.0001;
 //        double headingP = 0.3;
 
@@ -101,7 +104,8 @@ public class Drivetrain extends Subsystem {
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
         while(opmode.opModeIsActive() && (Math.abs(error) > 500 ||
-                Math.abs((currentPos-lastPos)/(System.currentTimeMillis()-lastTime)) > 0.00001)) {
+                Math.abs((currentPos-lastPos)/(System.currentTimeMillis()-lastTime)) > 0.00001)
+                && System.currentTimeMillis()-startTime < timeout) {
 
             lastTime = System.currentTimeMillis();
             lastPos = currentPos;
@@ -116,15 +120,21 @@ public class Drivetrain extends Subsystem {
 
             double turnPower = Range.clip(turnError*headingP, -headingLimit, headingLimit);
 
-            tel.addData("current", currentPos);
-            tel.addData("target", targetDist);
-            tel.update();
+            opmode.telemetry.addData("Mode", "STRAFE");
+            opmode.telemetry.addData("TargetHeading", targetHeading);
+            opmode.telemetry.addData("CurrrentHeading", currentAngle);
+            opmode.telemetry.addData("TargetPos", targetDist);
+            opmode.telemetry.addData("CurrentPos", currentPos);
+            opmode.telemetry.update();
 
             drive(0, drivePower, turnPower, false);
         }
     }
 
     public void driveDistance(double distanceInch) {
+
+        long startTime = System.currentTimeMillis();
+        long timeout = (long)(4000*Math.abs(distanceInch)/24.);
 
         resetEncoders();
 
@@ -134,21 +144,24 @@ public class Drivetrain extends Subsystem {
 
         int targetDist = inchesToTicks(distanceInch);
 
-        int currentPos = getEncoderTicks()[0];
+        int currentPos = getEncoderTicks()[1];
         int error = targetDist - currentPos;
 
-        long lastTime = System.currentTimeMillis();
+        long lastTime = System.currentTimeMillis()-1;
         int lastPos = currentPos;
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
+
+
         while(opmode.opModeIsActive() && (Math.abs(error) > 500 ||
-                Math.abs((currentPos-lastPos)/(System.currentTimeMillis()-lastTime)) > 0.00001)) {
+                Math.abs((currentPos-lastPos)/(System.currentTimeMillis()-lastTime)) > 0.00001)
+                && System.currentTimeMillis()-startTime < timeout) {
 
             lastTime = System.currentTimeMillis();
             lastPos = currentPos;
 
-            currentPos = getEncoderTicks()[0];
+            currentPos = getEncoderTicks()[1];
             error = targetDist - currentPos;
 
             double drivePower = Range.clip(error*driveP, -.4, .4);
@@ -158,11 +171,14 @@ public class Drivetrain extends Subsystem {
 
             double turnPower = Range.clip(turnError*headingP, -headingLimit, headingLimit);
 
-            tel.addData("current", currentPos);
-            tel.addData("target", targetDist);
-            tel.update();
+            opmode.telemetry.addData("Mode", "STRAIGHT");
+            opmode.telemetry.addData("TargetHeading", targetHeading);
+            opmode.telemetry.addData("CurrrentHeading", currentAngle);
+            opmode.telemetry.addData("TargetPos", targetDist);
+            opmode.telemetry.addData("CurrentPos", currentPos);
+            opmode.telemetry.update();
 
-            drive(drivePower, 0, turnPower, true);
+            drive(drivePower, 0, turnPower, false);
         }
 
     }
@@ -171,7 +187,10 @@ public class Drivetrain extends Subsystem {
 
     public void turnToHeading(double heading) {
 
-        targetHeading = heading;
+        long startTime = System.currentTimeMillis();
+        long timeout = 4000;
+
+        targetHeading = -heading;
 
         double P = 0.03;
 
@@ -182,12 +201,18 @@ public class Drivetrain extends Subsystem {
         long lastTime = System.currentTimeMillis();
 
         while(opmode.opModeIsActive() && (Math.abs(error) > 1.5 ||
-                Math.abs((currentHeading-lastHeading)/(System.currentTimeMillis()-lastTime)) > 0.0005)) {
+                Math.abs((currentHeading-lastHeading)/(System.currentTimeMillis()-lastTime)) > 0.0005)
+                && System.currentTimeMillis()-startTime < timeout) {
             lastHeading = currentHeading;
             lastTime = System.currentTimeMillis();
 
             currentHeading = robot.imu.revIMU.getHeading();
             error = currentHeading - targetHeading;
+
+            opmode.telemetry.addData("Mode", "TURN");
+            opmode.telemetry.addData("Target", targetHeading);
+            opmode.telemetry.addData("Currrent", currentHeading);
+            opmode.telemetry.update();
 
             double power = Range.clip(error*P, -0.5, 0.5);
             drive(0, 0, power, false);

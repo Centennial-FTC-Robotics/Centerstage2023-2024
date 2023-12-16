@@ -27,7 +27,7 @@ public class LineTest extends LinearOpMode {
     public static boolean strafe = false;
 
 
-    public void runOpMode() throws InterruptedException{
+    public void otherrunOpMode() throws InterruptedException{
 
         Robot robot = new Robot();
         robot.initialize(this);
@@ -37,7 +37,7 @@ public class LineTest extends LinearOpMode {
 
     }
 
-    public void OtherrunOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException {
         IMU imu = new IMU();
         Drivetrain dt = new Drivetrain();
         imu.init(this);

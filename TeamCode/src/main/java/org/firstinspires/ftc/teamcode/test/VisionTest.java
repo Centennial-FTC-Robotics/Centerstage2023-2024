@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.test;
 
-import android.graphics.Color;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.centennialrobotics.processors.ColorMassDetectionProcessor;
+import org.centennialrobotics.processors.ElementProcessor;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Scalar;
@@ -40,7 +38,7 @@ public class VisionTest extends LinearOpMode {
             high = redH;
         }
 
-        ColorMassDetectionProcessor processor = new ColorMassDetectionProcessor(
+        ElementProcessor processor = new ElementProcessor(
                 low,
                 high,
                 () -> minArea,
