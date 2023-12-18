@@ -68,8 +68,8 @@ public class Climber extends Subsystem {
         armBottom.getController().pwmEnable();
         armTop.getController().pwmEnable();
 
-        armBottom.setPosition(.4);
-        armTop.setPosition(.2);
+        armBottom.setPosition(.5);
+        armTop.setPosition(.25);
     }
 
     public void setServoEnabled(boolean enabled) {

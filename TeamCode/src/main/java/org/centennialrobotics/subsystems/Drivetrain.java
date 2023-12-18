@@ -43,6 +43,8 @@ public class Drivetrain extends Subsystem {
     public static double headingP = 0.05;
     public static double headingLimit = 0.4;
 
+    public double multiplier = 1;
+
     public void init(LinearOpMode opmode) {
         this.opmode = opmode;
 
@@ -236,7 +238,7 @@ public class Drivetrain extends Subsystem {
             // maybe use odo for heading or average odo and imu? faster cycles maybe?
             drivebase.driveFieldCentric(strafe, forward, turn, robot.imu.revIMU.getHeading());
         } else {
-            drivebase.driveRobotCentric(strafe, forward, turn);
+            drivebase.driveRobotCentric(strafe*multiplier, forward*multiplier, turn*multiplier);
         }
     }
 

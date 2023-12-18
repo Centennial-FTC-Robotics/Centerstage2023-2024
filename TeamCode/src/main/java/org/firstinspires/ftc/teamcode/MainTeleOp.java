@@ -46,6 +46,8 @@ public class MainTeleOp extends LinearOpMode {
 
             robot.intake.setNoodlePower(toolPad.getLeftY()*.7);
 
+            robot.drivetrain.multiplier = 1- (.7*gamepad1.right_trigger);
+
             if(toolPad.isDown(GamepadKeys.Button.B)) {
                 robot.outtake.setWheel(Outtake.wheelOutDir);
             } else if(robot.intake.noodleMotor.getPower() > 0.1){
