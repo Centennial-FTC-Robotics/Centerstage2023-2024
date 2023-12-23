@@ -15,6 +15,9 @@ public class Intake extends Subsystem {
 
     public static double intakePower = 0.6;
 
+    public static double liftLow = 1;
+    public static double liftHigh = 0;
+
     public DcMotorEx noodleMotor;
     // Left/Right when you consider slides to be front of robot
     public Servo intakeLift;
@@ -61,7 +64,7 @@ public class Intake extends Subsystem {
 
     public void setHeight(double height) {
 
-        height = Range.clip(height, 0, 1);
+        height = Range.clip(height*(liftHigh-liftLow)+liftLow, 0, 1);
 
         intakeLift.setPosition(height);
 

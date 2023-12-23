@@ -70,7 +70,7 @@ public class Drivetrain extends Subsystem {
         drivebase = new MecanumDrive(frontLeft, frontRight, backLeft, backRight);
 
         // change these and REVERSE some of them if necessary
-        parallelLeft = frontRight.encoder; //1
+        parallelLeft = frontLeft.encoder; //0
         parallelRight = backRight.encoder; //3
         perpendicularBack = backLeft.encoder;//2
 
