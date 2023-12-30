@@ -62,35 +62,83 @@ public class MeepMeepVisualization {
 //                                .splineToSplineHeading(new Pose2d(-1.5*t, 1.5*t, Math.toRadians(-180)), Math.toRadians(-90))
 //                                .splineToConstantHeading(new Vector2d(-2.5*t, 0.5*t), Math.toRadians(180))
 //                                .build()
-                        drive.trajectorySequenceBuilder(new Pose2d(-1.5*t, 2.5*t, Math.toRadians(270)))
+                        drive.trajectorySequenceBuilder(new Pose2d(-1.5*t, 2.5*t+4, Math.toRadians(270)))
                                 .splineToConstantHeading(new Vector2d(-47.45, 37.48), Math.toRadians(270.00))
-                                .waitSeconds(.5)
+                                .addTemporalMarker(() -> {
+//                                    intake.setHeight(4);
+//                                    outtake.setWheel(0);
+                                })
                                 .setReversed(true)
-                                .splineToConstantHeading(new Vector2d(-35.46, 36.76), Math.toRadians(270.00))
+                                .splineToConstantHeading(new Vector2d(-35.2, 34.76), Math.toRadians(270.00))
                                 .setReversed(false)
-                                .splineTo(new Vector2d(-43.69, 16.54), Math.toRadians(220.60))
-                                .splineTo(new Vector2d(-62.03, 11.05), Math.toRadians(180.00))
-                                .waitSeconds(.5)
+                                .splineTo(new Vector2d(-48.34, 12.39), Math.toRadians(191.31))
+                                .addTemporalMarker(() -> {
+//                                    intake.setNoodlePower(0.6);
+//                                    outtake.setWheel(-1*Outtake.wheelOutDir);
+                                })
+                                .splineTo(new Vector2d(-60.5, 11.05), Math.toRadians(180.00))
+                                .setReversed(true)
+                                .waitSeconds(0.5)
+                                .addTemporalMarker(() -> {
+//                                    intake.setNoodlePower(0);
+//                                    outtake.setWheel(0);
+                                })
+                                .splineTo(new Vector2d(24.77, 12.49), Math.toRadians(1.49))
+                                .addTemporalMarker(() -> {
+//                                    outtake.incrementSlidePos(2);
+                                })
+                                .splineToConstantHeading(new Vector2d(52, 41), Math.toRadians(0.00))
+                                .addTemporalMarker(() -> {
+//                                    outtake.setWheel(Outtake.wheelOutDir);
+                                })
+                                .waitSeconds(1)
+                                .setReversed(false)
+                                .splineTo(new Vector2d(41.02, 28.63), Math.toRadians(252.35))
+                                .addTemporalMarker(() -> {
+//                                    outtake.retractSlides();
+//                                    outtake.setWheel(0);
+//                                    intake.setHeight(3);
+//                                    intake.setNoodlePower(0.6);
+//                                    outtake.setWheel(-1*Outtake.wheelOutDir);
+
+                                })
+                                .splineTo(new Vector2d(13.42, 12.11), Math.toRadians(180.00))
+                                .splineTo(new Vector2d(-60.5, 11.05), Math.toRadians(180.00))
+                                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                    intake.setHeight(2);
+                                })
+                                .waitSeconds(1)
+                                .addTemporalMarker(() -> {
+//                                    intake.setNoodlePower(0);
+//                                    outtake.setWheel(0);
+                                })
                                 .setReversed(true)
                                 .splineTo(new Vector2d(24.77, 12.49), Math.toRadians(1.49))
-                                .splineTo(new Vector2d(49.47, 41.67), Math.toRadians(0.00))
-                                .setReversed(false)
-                                .waitSeconds(.5)
-
+                                .addTemporalMarker(() -> {
+//                                    outtake.incrementSlidePos(2);
+                                })
+                                .splineToConstantHeading(new Vector2d(52, 41), Math.toRadians(0.00))
+                                .addTemporalMarker(() -> {
+//                                    outtake.setWheel(Outtake.wheelOutDir);
+                                })
+                                .waitSeconds(1)
+                                .forward(2)
+                                .addTemporalMarker(() -> {
+//                                    outtake.setWheel(0);
+//                                    outtake.retractSlides();
+                                })
                                 .build()
+
                 );
 
-        try {
-            BufferedImage image = ImageIO.read(new URL("https://i.imgur.com/EOT4Pcj.png"));
-            meepMeep.setBackground(image)
-//            meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
-                    .setDarkMode(false)
-                    .addEntity(myBot)
-                    .start();
-        } catch (IOException e) {
-            System.out.println("Loading background image failed.");
 
-        }
+//            BufferedImage image = ImageIO.read(new URL("https://i.imgur.com/EOT4Pcj.png"));
+//            meepMeep.setBackground(image)
+        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
+                .setDarkMode(false)
+                .addEntity(myBot)
+                .start();
+
     }
 
     public static void main(String[] args) {

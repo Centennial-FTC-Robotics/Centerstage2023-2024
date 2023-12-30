@@ -16,7 +16,20 @@ public class Intake extends Subsystem {
     public static double intakePower = 0.6;
 
     public static double liftLow = 1;
+    public static double liftMid = .5;
     public static double liftHigh = 0;
+
+    public double[] heights = {0.64, 0.58, 0.52, 0.465, 0.4, 0};
+    public int currentHeight = 0;
+
+    // high: 0
+    // 5th:
+    // 4th: 0.465
+    // 3rd: 0.52
+    // 2nd: .58
+    // Ground: 0.64
+
+
 
     public DcMotorEx noodleMotor;
     // Left/Right when you consider slides to be front of robot
@@ -32,9 +45,11 @@ public class Intake extends Subsystem {
         intakeLift = opmode.hardwareMap.get(Servo.class, "leftIntake");
         intakeLift.setDirection(Servo.Direction.REVERSE);
 
-        setHeight(0);
+        setHeight(currentHeight);
 
     }
+
+
 
     public void expelOne() throws InterruptedException {
         noodleMotor.setPower(-0.17);
@@ -62,9 +77,21 @@ public class Intake extends Subsystem {
 
     }
 
+    public void incHeight(int inc) {
+        setHeight(currentHeight+inc);
+    }
+
+    public void setHeight(int heightLevel) {
+        if(heightLevel < 0 || heightLevel >= heights.length) {
+            return;
+        }
+        currentHeight = heightLevel;
+        setHeight(heights[currentHeight]);
+    }
+
     public void setHeight(double height) {
 
-        height = Range.clip(height*(liftHigh-liftLow)+liftLow, 0, 1);
+//        height = Range.clip(height*(liftHigh-liftLow)+liftLow, 0, 1);
 
         intakeLift.setPosition(height);
 

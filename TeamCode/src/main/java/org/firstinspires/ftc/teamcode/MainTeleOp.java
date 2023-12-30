@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.centennialrobotics.Robot;
+import org.centennialrobotics.subsystems.Intake;
 import org.centennialrobotics.subsystems.Outtake;
 
 
@@ -37,7 +38,16 @@ public class MainTeleOp extends LinearOpMode {
                     );
 
 
-            robot.intake.setHeight(toolPad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
+//            robot.intake.setHeight(toolPad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
+
+            if(gamepad2.y) {
+                robot.intake.setHeight(Intake.liftHigh);
+            } else if(gamepad2.x) {
+                robot.intake.setHeight(Intake.liftMid);
+            } else if(gamepad2.a) {
+                robot.intake.setHeight(Intake.liftLow);
+            }
+
 //            robot.outtake.setArm(toolPad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
 //            if(toolPad.wasJustPressed(GamepadKeys.Button.A)) {
