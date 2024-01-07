@@ -5,42 +5,59 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.centennialrobotics.Robot;
 import org.centennialrobotics.processors.ElementProcessor;
+import org.centennialrobotics.subsystems.Camera;
+import org.centennialrobotics.subsystems.Intake;
 import org.centennialrobotics.subsystems.Outtake;
+import org.centennialrobotics.util.CRTrajSeqBuilder;
+import org.centennialrobotics.util.Globals;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 @Autonomous
 public class AutoBlueFrontstage extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
-        Robot robot = new Robot();
-        robot.initialize(this);
-        robot.camera.init(true, this);
+
+        telemetry.addData("Status", "Init");
+        telemetry.update();
+
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        Outtake outtake = new Outtake();
+        Intake intake = new Intake();
+        Camera cam = new Camera();
+
+        outtake.init(this);
+        intake.init(this);
+        intake.setHeight(Intake.liftLow);
+        cam.init(true,this);
+
+
+        TrajectorySequence ts;
+        while(opModeInInit()) {
+            ElementProcessor.PropPositions propPos = cam.detectElement();
+
+            ts = CRTrajSeqBuilder.init(
+                    drive, Globals.Alliance.BLUE, Globals.StartLoc.FRONTSTAGE)
+                    .loadSubsystems(intake, outtake)
+                    .purpleDepositFrontstage(propPos, true)
+                    .scoreYellowFrontstage(propPos)
+                    .returnToIntakeStack(4)
+                    .scoreFromStack()
+                    .returnToIntakeStack(2)
+                    .scoreFromStack()
+                    .park(false)
+                    .build();
+
+            telemetry.addData("Detected", propPos.toString());
+            telemetry.update();
+        }
 
         waitForStart();
 
-        ElementProcessor.PropPositions pos = robot.camera.detectElement();
-        if(pos == ElementProcessor.PropPositions.LEFT) {
-            robot.drivetrain.driveDistance(27);
-
-//            robot.drivetrain.strafeDistance(22);
-            robot.drivetrain.turnToHeading(90);
-            robot.drivetrain.driveDistance(-22);
-            robot.intake.expelOne();
-        } else if(pos == ElementProcessor.PropPositions.RIGHT) {
-            robot.drivetrain.driveDistance(27);
-            robot.drivetrain.turnToHeading(90);
-            robot.intake.expelOne();
-//            robot.drivetrain.strafeDistance(-22);
-        } else if(pos == ElementProcessor.PropPositions.MIDDLE){
-            robot.drivetrain.driveDistance(35);
-            robot.drivetrain.driveDistance(-10);
-            robot.intake.expelOne();
-        } else {
-            telemetry.addData("pos", "unkown");
-            telemetry.update();
-            while(opModeIsActive());
+        while(opModeIsActive()) {
+            drive.update();
+            outtake.update();
         }
-
-
     }
 
 }

@@ -17,14 +17,11 @@ public class MeepMeepVisualization {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(45, 45, 3.8, 3.8, 18)
                 .followTrajectorySequence(
-                        drive -> drive.trajectorySequenceBuilder(new Pose2d(-35.25, 58.75, Math.toRadians(270.00)))
-                                .splineToLinearHeading(new Pose2d(-39.07, 29.83, Math.toRadians(320.00)), Math.toRadians(270.00))
+                        drive -> drive.trajectorySequenceBuilder(new Pose2d(-59.00, 11.00, Math.toRadians(180.00)))
                                 .setReversed(true)
-                                .splineToConstantHeading(new Vector2d(-51.63, 21.02), Math.toRadians(320.00))
-//                                .setReversed(false)
-                                .splineTo(new Vector2d(-53.00, 11.00), Math.toRadians(180.00))
-                                .splineTo(new Vector2d(-59.00, 11.00), Math.toRadians(180.00))
-//                                .setReversed(true)
+                                .splineTo(new Vector2d(22.00, 11.00), Math.toRadians(0.00))
+                                .splineTo(new Vector2d(50.48, 41.81), Math.toRadians(0.00))
+                                .setReversed(false)
                                 .build()
 
 
@@ -56,14 +53,23 @@ public class MeepMeepVisualization {
 
         double t = 23.5;
 
+        Globals.Alliance team = Globals.Alliance.RED;
+        Globals.StartLoc start = Globals.StartLoc.FRONTSTAGE;
+        ElementProcessor.PropPositions target = ElementProcessor.PropPositions.RIGHT;
+
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(45, 45, 3.8, 3.8, 18)
                 .followTrajectorySequence(
                         drive -> CRTrajSeqBuilder.init(
-                                drive, Globals.Alliance.RED,
-                                Globals.StartLoc.FRONTSTAGE)
-                                .purpleDepositFrontstage(ElementProcessor.PropPositions.MIDDLE, true)
+                                drive, team, start)
+                                .purpleDepositFrontstage(target, true)
+                                .scoreYellowFrontstage(target)
+                                .returnToIntakeStack(4)
+                                .scoreFromStack()
+                                .returnToIntakeStack(2)
+                                .scoreFromStack()
+                                .park(false)
                                 .build()
 
 

@@ -18,8 +18,7 @@ public class RRTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        telemetry.addData("Status", "Init");
-        telemetry.update();
+
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
