@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -12,7 +11,7 @@ import org.centennialrobotics.subsystems.Outtake;
 
 
 @TeleOp
-public class MainTeleOp extends LinearOpMode {
+public class SoloTeleOp extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
@@ -20,7 +19,6 @@ public class MainTeleOp extends LinearOpMode {
         robot.initialize(this);
 
         GamepadEx drivePad = new GamepadEx(gamepad1);
-        GamepadEx toolPad = new GamepadEx(gamepad2);
 
         int newPower = 0;
 
@@ -28,7 +26,6 @@ public class MainTeleOp extends LinearOpMode {
         while(opModeIsActive()) {
             robot.outtake.update();
             drivePad.readButtons();
-            toolPad.readButtons();
 
             robot.drivetrain.drive(
                     drivePad.getLeftY(),
@@ -39,12 +36,11 @@ public class MainTeleOp extends LinearOpMode {
 
 //            robot.intake.setHeight(toolPad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
-            if(gamepad2.y) {
-                robot.intake.setHeight(Intake.liftHigh);
-            } else if(gamepad2.x) {
-                robot.intake.setHeight(Intake.liftMid);
-            } else if(gamepad2.a) {
-                robot.intake.setHeight(Intake.liftLow);
+            if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                robot.intake.setHeight(5);
+            }
+            if(drivePad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                robot.intake.incHeight(-1);
             }
 
 //            robot.outtake.setArm(toolPad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
@@ -53,10 +49,12 @@ public class MainTeleOp extends LinearOpMode {
 //                newPower = robot.intake.cycleNoodles();
 //            }
 
-            robot.intake.setNoodlePower(toolPad.getLeftY()*.7);
+            robot.intake.setNoodlePower((
+                    drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) -
+                    drivePad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER))*0.8);
 
 
-            if(toolPad.isDown(GamepadKeys.Button.B)) {
+            if(drivePad.isDown(GamepadKeys.Button.B)) {
                 robot.outtake.setWheel(Outtake.wheelOutDir);
             } else if(robot.intake.noodleMotor.getPower() > 0.1){
                 robot.outtake.setWheel(-Outtake.wheelOutDir);
@@ -70,51 +68,15 @@ public class MainTeleOp extends LinearOpMode {
 //            }
 
 
-            if(toolPad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            if(drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 robot.outtake.incrementSlidePos(1);
             }
-            if(toolPad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
                 robot.outtake.retractSlides();
             }
 
-            if(gamepad1.dpad_up) {
-                robot.climber.up();
-            }
-
-            if(gamepad1.dpad_left) {
-                robot.climber.left();
-            }
-
-            if(gamepad1.dpad_right) {
-                robot.climber.right();
-            }
-
-            if(gamepad1.dpad_down) {
-                robot.climber.down();
-            }
-
-            if(gamepad1.a) {
-                robot.climber.setServoEnabled(true);
-            }
-            if(gamepad1.b) {
-                robot.climber.setServoEnabled(false);
-            }
-
-            if(gamepad1.right_bumper) {
-                robot.climber.launcher.setPower(0.2);
-            } else if(gamepad1.left_bumper) {
-                robot.climber.launcher.setPower(-0.2);
-            } else {
-                robot.climber.launcher.setPower(0);
-            }
-
-            int hangMotorPower = 0;
-            if(drivePad.isDown(GamepadKeys.Button.Y)) {
-                hangMotorPower = 1;
-            } else if(drivePad.isDown(GamepadKeys.Button.X)) {
-                hangMotorPower = -1;
-            }
-            robot.climber.hangMotor.setPower(hangMotorPower);
+            robot.drivetrain.setRotationLock(
+                    drivePad.isDown(GamepadKeys.Button.RIGHT_STICK_BUTTON));
 
         }
 

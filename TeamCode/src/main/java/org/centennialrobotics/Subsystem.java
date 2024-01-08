@@ -7,13 +7,13 @@ public abstract class Subsystem {
 
     public Robot robot;
 
-    public void preInit(LinearOpMode opmode, Robot robot) {
+    public void preInit(LinearOpMode opmode, Robot robot) throws InterruptedException {
         this.robot = robot;
         init(opmode);
     }
 
     public void update() {}
 
-    public abstract void init(LinearOpMode opmode);
+    public abstract void init(LinearOpMode opmode) throws InterruptedException;
 
 }

@@ -1,5 +1,6 @@
 package org.centennialrobotics.subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -12,20 +13,30 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.centennialrobotics.Subsystem;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Config
 public class Outtake extends Subsystem {
 
     public static double slideP = 0.005;
+    public static double slideI = 0.0000;
+    public static double slideD = 0;
     public static double slideF = 0.1;
+    public static int errorThreshold = 5;
 
     public static double pivotHeight = 150;
 
     public static double pivotFlat = 0.38;
     public static double pivotUp = 0.7;
 
-    public int slidesTarget = -10;
+    public static double maxDownSpeed = 0.35;
+
+    public int slidesTarget = 0;
+
+    public int errorSum = 0;
+    public int lastError = 0;
+    public long lastTime = 0;
 
     public static int wheelOutDir = 1;
 
@@ -36,11 +47,11 @@ public class Outtake extends Subsystem {
 
     public CRServo wheel;
 
-    private int[] targets = {-10, 400, 470, 570, 650};
+    private int[] targets = {0, 350, 420, 500, 650};
 
     private LinearOpMode opmode;
 
-    public void init(LinearOpMode opmode) {
+    public void init(LinearOpMode opmode) throws InterruptedException {
         this.opmode = opmode;
         arm = opmode.hardwareMap.get(Servo.class, "outtakeServoL");
 
@@ -60,6 +71,8 @@ public class Outtake extends Subsystem {
         }
         slideMotorR.setPower(0);
         slideMotorL.setPower(0);
+
+        Thread.sleep(700);
 
         slideMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -83,7 +96,7 @@ public class Outtake extends Subsystem {
     }
 
     public void retractSlides() {
-        slidesTarget = -10;
+        slidesTarget = 0;
     }
 
     public void setWheel(double power) {
@@ -101,15 +114,38 @@ public class Outtake extends Subsystem {
 
     public void update() {
 
+        long t = System.currentTimeMillis();
+
+        if(lastTime == 0) {
+            lastTime = t-1;
+        }
+
+
         int pos = -slideMotorR.getCurrentPosition();
         double error = slidesTarget - pos;
 
-        double power = Range.clip(error*slideP + slideF, -.25, 1);
+        double speed = (double)(error-lastError)/(double)(t-lastTime);
+
+        if(Math.abs(error) < errorThreshold) {
+            errorSum = 0;
+        } else {
+            errorSum += error;
+        }
+
+        Telemetry tel =  FtcDashboard.getInstance().getTelemetry();
+        tel.addData("target", slidesTarget);
+        tel.addData("pos", pos);
+        tel.update();
+
+        double power = Range.clip(error*slideP + errorSum*slideI + +speed*slideD + slideF,
+                -maxDownSpeed, 1);
 
         slideMotorL.setPower(power);
         slideMotorR.setPower(power);
 
         setArm(pos > pivotHeight && slidesTarget > pivotHeight);
+
+        lastTime = t;
     }
 
 }

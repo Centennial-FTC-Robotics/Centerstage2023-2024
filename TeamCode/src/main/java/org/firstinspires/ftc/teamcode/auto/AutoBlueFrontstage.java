@@ -32,7 +32,7 @@ public class AutoBlueFrontstage extends LinearOpMode {
         cam.init(true,this);
 
 
-        TrajectorySequence ts;
+        TrajectorySequence ts = null;
         while(opModeInInit()) {
             ElementProcessor.PropPositions propPos = cam.detectElement();
 
@@ -48,12 +48,14 @@ public class AutoBlueFrontstage extends LinearOpMode {
                     .park(false)
                     .build();
 
+            drive.setPoseEstimate(ts.start());
+
             telemetry.addData("Detected", propPos.toString());
             telemetry.update();
         }
 
         waitForStart();
-
+        drive.followTrajectorySequenceAsync(ts);
         while(opModeIsActive()) {
             drive.update();
             outtake.update();

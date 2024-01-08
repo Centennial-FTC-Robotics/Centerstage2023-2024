@@ -49,7 +49,7 @@ public class MeepMeepVisualization {
     }
 
     public static void traj3() {
-        MeepMeep meepMeep = new MeepMeep(900);
+        MeepMeep meepMeep = new MeepMeep(700);
 
         double t = 23.5;
 
@@ -59,7 +59,7 @@ public class MeepMeepVisualization {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(45, 45, 3.8, 3.8, 18)
+                .setConstraints(50, 120, 3.8, 3.8, 18)
                 .followTrajectorySequence(
                         drive -> CRTrajSeqBuilder.init(
                                 drive, team, start)

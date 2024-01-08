@@ -70,8 +70,7 @@ public class AlignTest extends LinearOpMode {
             dt.drive(
                     forwardMultiplier*drivePad.getLeftY(),
                     sideMultiplier*drivePad.getLeftX(),
-                    power,
-                    false
+                    power
             );
             telemetry.addData("left", leftDist);
             telemetry.addData("right", rightDist);

@@ -23,7 +23,7 @@ public class Robot {
         drivetrain, outtake, intake, imu, climber
     };
 
-    public void initialize(LinearOpMode opmode) {
+    public void initialize(LinearOpMode opmode) throws InterruptedException {
 
         for(Subsystem subsystem : subsystems) {
             subsystem.preInit(opmode, this);
