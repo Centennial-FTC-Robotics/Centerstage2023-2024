@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.centennialrobotics.Subsystem;
+import org.centennialrobotics.util.Globals;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 public class Outtake extends Subsystem {
 
     public static double slideP = 0.005;
-    public static double slideI = 0.0000;
+    public static double slideI = 0.0001;
     public static double slideD = 0;
     public static double slideF = 0.1;
     public static int errorThreshold = 5;
@@ -47,7 +48,7 @@ public class Outtake extends Subsystem {
 
     public CRServo wheel;
 
-    private int[] targets = {0, 350, 420, 500, 650};
+    private int[] targets = {0, 350, 420, 500, 580, 640};
 
     private LinearOpMode opmode;
 
@@ -60,7 +61,9 @@ public class Outtake extends Subsystem {
         slideMotorL = opmode.hardwareMap.get(DcMotorEx.class, "slideMotorL");
         slideMotorR = opmode.hardwareMap.get(DcMotorEx.class, "slideMotorR");
 
-        slideMotorR.setDirection(DcMotorEx.Direction.REVERSE);
+        if(!Globals.REVERSE_MOTORS) {
+            slideMotorR.setDirection(DcMotorEx.Direction.REVERSE);
+        } else slideMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
 
         slideMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         slideMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,6 +11,7 @@ import org.centennialrobotics.subsystems.Intake;
 import org.centennialrobotics.subsystems.Outtake;
 
 
+@Photon
 @TeleOp
 public class SoloTeleOp extends LinearOpMode {
 
@@ -21,6 +23,7 @@ public class SoloTeleOp extends LinearOpMode {
         GamepadEx drivePad = new GamepadEx(gamepad1);
 
         int newPower = 0;
+        double lastFrame = 0;
 
         waitForStart();
         while(opModeIsActive()) {
@@ -77,8 +80,13 @@ public class SoloTeleOp extends LinearOpMode {
 
             robot.drivetrain.setRotationLock(
                     drivePad.isDown(GamepadKeys.Button.RIGHT_STICK_BUTTON));
-
+            double currFrame = System.nanoTime();
+            telemetry.addData("hz ", 1000000000 / (currFrame - lastFrame));
+            lastFrame = currFrame;
+            telemetry.update();
         }
+
+
 
     }
 }

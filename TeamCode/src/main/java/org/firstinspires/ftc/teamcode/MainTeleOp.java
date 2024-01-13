@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,7 +11,7 @@ import org.centennialrobotics.Robot;
 import org.centennialrobotics.subsystems.Intake;
 import org.centennialrobotics.subsystems.Outtake;
 
-
+@Photon
 @TeleOp
 public class MainTeleOp extends LinearOpMode {
 
@@ -30,21 +31,31 @@ public class MainTeleOp extends LinearOpMode {
             drivePad.readButtons();
             toolPad.readButtons();
 
+
             robot.drivetrain.drive(
                     drivePad.getLeftY(),
                     drivePad.getLeftX(),
                     drivePad.getRightX()
             );
 
+            if(drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                robot.drivetrain.mult *= -1;
+            }
+
+            if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                robot.drivetrain.mult *= 0.4;
+            } else if(drivePad.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)) {
+                robot.drivetrain.mult = Math.signum(robot.drivetrain.mult);
+            }
+
 
 //            robot.intake.setHeight(toolPad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
-            if(gamepad2.y) {
-                robot.intake.setHeight(Intake.liftHigh);
-            } else if(gamepad2.x) {
-                robot.intake.setHeight(Intake.liftMid);
-            } else if(gamepad2.a) {
-                robot.intake.setHeight(Intake.liftLow);
+            if(toolPad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                robot.intake.setHeight(5);
+            }
+            if(toolPad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                robot.intake.incHeight(-1);
             }
 
 //            robot.outtake.setArm(toolPad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
@@ -53,7 +64,7 @@ public class MainTeleOp extends LinearOpMode {
 //                newPower = robot.intake.cycleNoodles();
 //            }
 
-            robot.intake.setNoodlePower(toolPad.getLeftY()*.7);
+            robot.intake.setNoodlePower(toolPad.getLeftY()*.65);
 
 
             if(toolPad.isDown(GamepadKeys.Button.B)) {
@@ -77,19 +88,19 @@ public class MainTeleOp extends LinearOpMode {
                 robot.outtake.retractSlides();
             }
 
-            if(gamepad1.dpad_up) {
+            if(gamepad2.y) {
                 robot.climber.up();
             }
 
-            if(gamepad1.dpad_left) {
+            if(gamepad2.x) {
                 robot.climber.left();
             }
 
-            if(gamepad1.dpad_right) {
-                robot.climber.right();
-            }
+//            if(gamepad1.dpad_right) {
+//                robot.climber.right();
+//            }
 
-            if(gamepad1.dpad_down) {
+            if(gamepad2.a) {
                 robot.climber.down();
             }
 
@@ -100,19 +111,17 @@ public class MainTeleOp extends LinearOpMode {
                 robot.climber.setServoEnabled(false);
             }
 
-            if(gamepad1.right_bumper) {
-                robot.climber.launcher.setPower(0.2);
-            } else if(gamepad1.left_bumper) {
-                robot.climber.launcher.setPower(-0.2);
-            } else {
-                robot.climber.launcher.setPower(0);
-            }
+//            if(gamepad1.right_bumper) {
+//                robot.climber.launcher.setPower(0.2);
+//            } else if(gamepad1.left_bumper) {
+//                robot.climber.launcher.setPower(-0.2);
+//            } else {
+//                robot.climber.launcher.setPower(0);
+//            }
 
-            int hangMotorPower = 0;
-            if(drivePad.isDown(GamepadKeys.Button.Y)) {
-                hangMotorPower = 1;
-            } else if(drivePad.isDown(GamepadKeys.Button.X)) {
-                hangMotorPower = -1;
+            double hangMotorPower = (double)(gamepad2.right_trigger - gamepad2.left_trigger);
+            if(hangMotorPower > 0) {
+                robot.climber.setServoEnabled(false);
             }
             robot.climber.hangMotor.setPower(hangMotorPower);
 

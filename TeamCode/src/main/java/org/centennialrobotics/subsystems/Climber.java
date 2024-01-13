@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.centennialrobotics.Subsystem;
+import org.centennialrobotics.util.Globals;
 
 @Config
 public class Climber extends Subsystem {
@@ -29,8 +30,9 @@ public class Climber extends Subsystem {
     public void init(LinearOpMode opmode) {
         hangMotor = opmode.hardwareMap.get(DcMotorEx.class, "hangMotor");
         hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        hangMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-//        hangMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        if(!Globals.REVERSE_MOTORS)
+            hangMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         armBottom = opmode.hardwareMap.get(Servo.class, "bottomHangServo");
         armTop = opmode.hardwareMap.get(Servo.class, "topHangServo");

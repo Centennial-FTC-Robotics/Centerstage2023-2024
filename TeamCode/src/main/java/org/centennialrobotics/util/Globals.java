@@ -10,4 +10,6 @@ public class Globals {
         FRONTSTAGE, BACKSTAGE
     }
 
+    public static boolean REVERSE_MOTORS;
+
 }

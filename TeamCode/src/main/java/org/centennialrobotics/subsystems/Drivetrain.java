@@ -46,6 +46,8 @@ public class Drivetrain extends Subsystem {
 
     }
 
+    public double mult = 1;
+
     public void setRotationLock(boolean activate) {
         if(activate && targetHeading < -999999) {
             targetHeading = drivebase.getPoseEstimate().getHeading();
@@ -64,8 +66,8 @@ public class Drivetrain extends Subsystem {
 
         drivebase.setWeightedDrivePower(
                 new Pose2d(
-                        forward,
-                        -strafe,
+                        mult*forward,
+                        -strafe*mult,
                         -turn
                 )
         );

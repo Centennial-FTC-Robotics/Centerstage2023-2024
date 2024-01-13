@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.centennialrobotics.Subsystem;
+import org.centennialrobotics.util.Globals;
 
 @Config
 public class Intake extends Subsystem {
@@ -40,7 +41,8 @@ public class Intake extends Subsystem {
         noodleMotor = opmode.hardwareMap.get(DcMotorEx.class, "noodleMotor");
         noodleMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         noodleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-         noodleMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        if(!Globals.REVERSE_MOTORS)
+            noodleMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
         intakeLift = opmode.hardwareMap.get(Servo.class, "leftIntake");
         intakeLift.setDirection(Servo.Direction.REVERSE);

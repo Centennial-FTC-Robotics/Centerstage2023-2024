@@ -149,6 +149,51 @@ public class CRTrajSeqBuilder {
         return this;
     }
 
+    public CRTrajSeqBuilder purpleYellowBackstage(
+            ElementProcessor.PropPositions propPos) {
+
+        RandomizationPos randPos = getRandomizationPos(propPos);
+        int mult = (team == Globals.Alliance.RED) ? -1 : 1;
+        double targetY;
+
+        if(randPos == RandomizationPos.OUTER) {
+            targetY = mult * BACKDROP_OUTER;
+        } else if(randPos == RandomizationPos.CENTER) {
+            targetY = mult * BACKDROP_CENTER;
+        } else {
+            targetY = mult * BACKDROP_INNER;
+        }
+
+        if(randPos == RandomizationPos.INNER) {
+            seq.splineTo(new Vector2d(8.92, mult*35.95), Math.toRadians(mult*200.00));
+        } else if(randPos == RandomizationPos.CENTER) {
+            seq.splineToLinearHeading(new Pose2d(15.74, mult*33.25,
+                    Math.toRadians(245.00*mult)), Math.toRadians(270.00*mult));
+        } else {
+            seq.splineToLinearHeading(new Pose2d(
+                    31.76, mult*31.76, Math.toRadians(mult*180.00)),
+                    Math.toRadians(mult*225.00));
+        }
+
+        seq.addTemporalMarker(() -> {
+//                    intake.setHeight(5);
+                })
+                .setReversed(true)
+                .UNSTABLE_addTemporalMarkerOffset(0.25, () -> {
+//                    outtake.incrementSlidePos(1);
+                })
+                .splineTo(new Vector2d(BACKDROP_DISTANCE, targetY), 0)
+                .addTemporalMarker(() -> {
+//                    outtake.setWheel(Outtake.wheelOutDir);
+                })
+                .waitSeconds(0.7)
+                .setReversed(false);
+
+
+        return this;
+
+    }
+
     public CRTrajSeqBuilder scoreYellowFrontstage(
 //            Intake intake,
 //            Outtake outtake,
