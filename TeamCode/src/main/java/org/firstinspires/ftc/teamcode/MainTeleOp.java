@@ -11,7 +11,6 @@ import org.centennialrobotics.Robot;
 import org.centennialrobotics.subsystems.Intake;
 import org.centennialrobotics.subsystems.Outtake;
 
-@Photon
 @TeleOp
 public class MainTeleOp extends LinearOpMode {
 
@@ -90,6 +89,7 @@ public class MainTeleOp extends LinearOpMode {
 
             if(gamepad2.y) {
                 robot.climber.up();
+                robot.climber.setLauncherLift(true);
             }
 
             if(gamepad2.x) {
@@ -102,14 +102,16 @@ public class MainTeleOp extends LinearOpMode {
 
             if(gamepad2.a) {
                 robot.climber.down();
+                robot.climber.setLauncherLift(false);
             }
 
-            if(gamepad1.a) {
-                robot.climber.setServoEnabled(true);
+
+
+            if(gamepad2.left_stick_button && gamepad2.right_stick_button) {
+                robot.climber.launchPlane();
             }
-            if(gamepad1.b) {
-                robot.climber.setServoEnabled(false);
-            }
+
+
 
 //            if(gamepad1.right_bumper) {
 //                robot.climber.launcher.setPower(0.2);

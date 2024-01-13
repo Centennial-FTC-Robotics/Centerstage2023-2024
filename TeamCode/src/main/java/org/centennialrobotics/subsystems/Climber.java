@@ -17,15 +17,18 @@ public class Climber extends Subsystem {
     public static double hangUp = 0.35;
     public static double hangLow = 0;
 
+    public static double launcherUp = 0.35;
+
     public static boolean servosEnabled = true;
 
     public DcMotorEx hangMotor;
     public Servo armBottom;
     public Servo armTop;
 
-    public CRServo launcher;
+    public Servo launcher;
+    public Servo launcherLift;
 
-
+    public boolean launcherLifted = false;
 
     public void init(LinearOpMode opmode) {
         hangMotor = opmode.hardwareMap.get(DcMotorEx.class, "hangMotor");
@@ -37,9 +40,32 @@ public class Climber extends Subsystem {
         armBottom = opmode.hardwareMap.get(Servo.class, "bottomHangServo");
         armTop = opmode.hardwareMap.get(Servo.class, "topHangServo");
 
-        launcher = opmode.hardwareMap.get(CRServo.class, "launcherServo");
+//        armBottom.setDirection(Servo.Direction.REVERSE);
+//        armTop.setDirection(Servo.Direction.REVERSE);
+
+        launcher = opmode.hardwareMap.get(Servo.class, "launcherServo");
+        launcherLift = opmode.hardwareMap.get(Servo.class, "launcherLift");
+
+        launcherLift.setDirection(Servo.Direction.REVERSE);
+
+        launcher.setPosition(0);
+        launcherLift.setPosition(0);
 
         down();
+    }
+
+    public void launchPlane() {
+        launcher.setPosition(1);
+    }
+
+    public void setLauncherLift(boolean up) {
+        launcherLifted = up;
+        if(up) {
+            launcherLift.setPosition(launcherUp);
+        } else {
+            launcherLift.setPosition(0);
+        }
+
     }
 
     public void up() {
@@ -54,7 +80,7 @@ public class Climber extends Subsystem {
         armBottom.getController().pwmEnable();
         armTop.getController().pwmEnable();
 
-        armBottom.setPosition(.16);
+        armBottom.setPosition(.13);
         armTop.setPosition(1);
     }
 

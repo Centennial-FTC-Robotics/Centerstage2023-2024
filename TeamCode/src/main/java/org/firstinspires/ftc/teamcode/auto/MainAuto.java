@@ -14,7 +14,6 @@ import org.centennialrobotics.util.Globals;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
-@Photon
 @Autonomous
 public class MainAuto extends LinearOpMode {
 
