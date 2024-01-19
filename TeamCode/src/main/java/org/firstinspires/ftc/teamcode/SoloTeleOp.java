@@ -70,11 +70,14 @@ public class SoloTeleOp extends LinearOpMode {
 //                robot.outtake.setWheel(0);
 //            }
 
-
             if(drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                robot.drivetrain.mult *= -1;
+            }
+
+            if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
                 robot.outtake.incrementSlidePos(1);
             }
-            if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            if(drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
                 robot.outtake.retractSlides();
             }
 

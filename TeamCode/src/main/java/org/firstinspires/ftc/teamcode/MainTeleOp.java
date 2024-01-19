@@ -11,6 +11,7 @@ import org.centennialrobotics.Robot;
 import org.centennialrobotics.subsystems.Intake;
 import org.centennialrobotics.subsystems.Outtake;
 
+@Photon
 @TeleOp
 public class MainTeleOp extends LinearOpMode {
 

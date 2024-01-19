@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.centennialrobotics.processors.ElementProcessor;
 import org.centennialrobotics.subsystems.Camera;
@@ -14,6 +15,7 @@ import org.centennialrobotics.util.Globals;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
+@Photon
 @Autonomous
 public class MainAuto extends LinearOpMode {
 
@@ -35,6 +37,11 @@ public class MainAuto extends LinearOpMode {
         outtake.init(this);
         intake.init(this);
         intake.setHeight(Intake.liftLow);
+
+        Servo armBottom = hardwareMap.get(Servo.class, "bottomHangServo");
+        Servo armTop = hardwareMap.get(Servo.class, "topHangServo");
+        armBottom.setPosition(0.5);
+        armTop.setPosition(0.5);
 
         Globals.Alliance team = new CRMenu<>(
                 Globals.Alliance.BLUE, Globals.Alliance.RED, null, null).get(this);
@@ -69,6 +76,8 @@ public class MainAuto extends LinearOpMode {
         }
 
         waitForStart();
+        armBottom.setPosition(.13);
+        armTop.setPosition(1);
         drive.followTrajectorySequenceAsync(ts);
 
         double lastFrame = 0;

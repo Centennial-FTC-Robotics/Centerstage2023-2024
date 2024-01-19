@@ -26,10 +26,10 @@ public class CRTrajSeqBuilder {
     public static double BACKDROP_INNER = 29.4;
     public static double BACKDROP_CENTER = 35.4;
     public static double BACKDROP_OUTER = 41.4;
-    public static double BACKDROP_DISTANCE = 52;
+    public static double BACKDROP_DISTANCE = 52.5;
     public static double STACK_X = -61;
     public static double STACK_Y = 11.5;
-    public static double ROBOT_START_Y = 2.5*23.5;
+    public static double ROBOT_START_Y = 2.5*23.5+2;
 
 
     private TrajectorySequenceBuilder seq;
@@ -197,13 +197,7 @@ public class CRTrajSeqBuilder {
                     outtake.setWheel(0);
                 })
                 .splineTo(new Vector2d(25.00, STACK_Y*mult), Math.toRadians(0.00))
-                .splineTo(new Vector2d(BACKDROP_DISTANCE-3, targetY), Math.toRadians(0.00))
-                .addTemporalMarker(() -> {
-                    outtake.incrementSlidePos(1);
-                })
-                .setVelConstraint(new TranslationalVelocityConstraint(10))
-                .waitSeconds(0.35)
-                .back(3)
+                .splineTo(new Vector2d(BACKDROP_DISTANCE, targetY), Math.toRadians(0.00))
                 .addTemporalMarker(() -> {
                     outtake.setWheel(Outtake.wheelOutDir);
                 })
@@ -221,17 +215,17 @@ public class CRTrajSeqBuilder {
         double targetY;
 
         if(randPos == RandomizationPos.OUTER) {
-            targetY = mult * BACKDROP_OUTER;
+            targetY = mult * BACKDROP_OUTER+2;
         } else if(randPos == RandomizationPos.CENTER) {
             targetY = mult * BACKDROP_CENTER;
         } else {
-            targetY = mult * BACKDROP_INNER;
+            targetY = mult * BACKDROP_INNER-2;
         }
 
         if(randPos == RandomizationPos.INNER) {
-            seq.splineTo(new Vector2d(8.92, mult*35.95), Math.toRadians(mult*200.00));
+            seq.splineTo(new Vector2d(8.0, mult*35.95), Math.toRadians(mult*200.00));
         } else if(randPos == RandomizationPos.CENTER) {
-            seq.splineToLinearHeading(new Pose2d(15.74, mult*33.25,
+            seq.splineToLinearHeading(new Pose2d(15.74, mult*29.5,
                     Math.toRadians(245.00*mult)), Math.toRadians(270.00*mult));
         } else {
             seq.splineToLinearHeading(new Pose2d(
@@ -246,11 +240,11 @@ public class CRTrajSeqBuilder {
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> {
                     outtake.incrementSlidePos(1);
                 })
-                .splineTo(new Vector2d(BACKDROP_DISTANCE, targetY), 0)
+                .splineTo(new Vector2d(BACKDROP_DISTANCE+1, targetY), 0)
                 .addTemporalMarker(() -> {
-                    outtake.setWheel(Outtake.wheelOutDir);
+                    outtake.setWheel(0.4*Outtake.wheelOutDir);
                 })
-                .waitSeconds(0.7)
+                .waitSeconds(.4)
                 .setReversed(false);
 
 
@@ -272,13 +266,13 @@ public class CRTrajSeqBuilder {
                 })
                 .splineTo(new Vector2d(25.00, STACK_Y*mult), Math.toRadians(0.00))
                 .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
-                    outtake.incrementSlidePos(2);
+                    outtake.incrementSlidePos(3);
                 })
                 .splineTo(new Vector2d(BACKDROP_DISTANCE+1.5, mult*BACKDROP_INNER), Math.toRadians(0.00))
                 .addTemporalMarker(() -> {
                     outtake.setWheel(Outtake.wheelOutDir);
                 })
-                .waitSeconds(0.7)
+                .waitSeconds(0.4)
                 .setReversed(false);
 
         return this;
@@ -302,13 +296,14 @@ public class CRTrajSeqBuilder {
                 })
                 .splineTo(new Vector2d(25.00, STACK_Y*mult), Math.toRadians(mult*180))
                 .splineTo(new Vector2d(STACK_X+1.5, STACK_Y*mult), Math.toRadians(mult*180))
+                .waitSeconds(0.05)
                 .addTemporalMarker(() -> {
                     intake.setHeight(oneHigherIntakeHeight-1);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                     intake.setHeight(oneHigherIntakeHeight-2);
                 })
-                .waitSeconds(1);
+                .waitSeconds(.7);
 
         return this;
     }

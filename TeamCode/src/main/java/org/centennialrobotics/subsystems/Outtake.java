@@ -48,7 +48,8 @@ public class Outtake extends Subsystem {
 
     public CRServo wheel;
 
-    private int[] targets = {0, 350, 420, 500, 580, 640};
+    private int[] targets = {0, 350-25, 420-25, 500-25, 580-25, 640-25};
+//    public static int slideOffset = 0;
 
     private LinearOpMode opmode;
 

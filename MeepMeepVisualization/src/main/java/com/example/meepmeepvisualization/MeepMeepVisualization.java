@@ -55,11 +55,11 @@ public class MeepMeepVisualization {
 
         Globals.Alliance team = Globals.Alliance.RED;
         Globals.StartLoc start = Globals.StartLoc.BACKSTAGE;
-        ElementProcessor.PropPositions target = ElementProcessor.PropPositions.RIGHT;
+        ElementProcessor.PropPositions target = ElementProcessor.PropPositions.MIDDLE;
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(45, 120, 3.8, 3.8, 18)
+                .setConstraints(50, 50, 3.8, 3.8, 18)
                 .followTrajectorySequence(
                         drive -> CRTrajSeqBuilder.init(
                                 drive, team, start)
@@ -67,8 +67,6 @@ public class MeepMeepVisualization {
                                 .returnToIntakeStack(5)
                                 .scoreFromStack()
                                 .returnToIntakeStack(3)
-                                .scoreFromStack()
-                                .returnToIntakeStack(2)
                                 .scoreFromStack()
                                 .park(false)
                                 .build()
