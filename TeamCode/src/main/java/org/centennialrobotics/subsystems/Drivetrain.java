@@ -35,10 +35,6 @@ public class Drivetrain extends Subsystem {
 
     public LinearOpMode opmode;
 
-    public double targetHeading = -1000000;
-
-    public static double headingP = 0.005;
-
     public void init(LinearOpMode opmode) {
         this.opmode = opmode;
 
@@ -48,21 +44,9 @@ public class Drivetrain extends Subsystem {
 
     public double mult = 1;
 
-    public void setRotationLock(boolean activate) {
-        if(activate && targetHeading < -999999) {
-            targetHeading = drivebase.getPoseEstimate().getHeading();
-        } else if(!activate) {
-            targetHeading = -1000000;
-        }
-    }
-
 
     public void drive(double forward, double strafe, double turn) {
 
-        if(targetHeading > -999999) {
-            double error = drivebase.getPoseEstimate().getHeading() - targetHeading;
-            turn = headingP * error;
-        }
 
         drivebase.setWeightedDrivePower(
                 new Pose2d(
