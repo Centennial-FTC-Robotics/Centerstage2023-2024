@@ -55,7 +55,7 @@ public class Climber extends Subsystem {
     }
 
     public void launchPlane() {
-        launcher.setPosition(1);
+        launcher.setPosition(0.15);
     }
 
     public void setLauncherLift(boolean up) {

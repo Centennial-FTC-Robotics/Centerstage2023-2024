@@ -80,9 +80,10 @@ public class SoloTeleOp extends LinearOpMode {
             if(drivePad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
                 robot.outtake.retractSlides();
             }
-
+/*
             robot.drivetrain.setRotationLock(
                     drivePad.isDown(GamepadKeys.Button.RIGHT_STICK_BUTTON));
+                     */
             double currFrame = System.nanoTime();
             telemetry.addData("hz ", 1000000000 / (currFrame - lastFrame));
             lastFrame = currFrame;
