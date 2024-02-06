@@ -2,13 +2,11 @@ package org.centennialrobotics.subsystems;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -28,7 +26,7 @@ public class Outtake extends Subsystem {
 
     public static double pivotHeight = 150;
 
-    public static double pivotFlat = 0.38;
+    public static double pivotFlat = 0.42;
     public static double pivotUp = 0.7;
 
     public static double maxDownSpeed = 0.35;
@@ -48,8 +46,12 @@ public class Outtake extends Subsystem {
 
     public CRServo wheel;
 
-    private int[] targets = {0, 350-25, 420-25, 500-25, 580-25, 640-25};
-//    public static int slideOffset = 0;
+    public static int off = 0;
+    public int[] targets = {0, 350-off, 420-off, 500-off, 580-off, 660-off, 740-off, 820-off,
+            900-off, 980-off};
+    public double manualPower = 0;
+
+    public int pos = -1;
 
     private LinearOpMode opmode;
 
@@ -92,7 +94,7 @@ public class Outtake extends Subsystem {
 
     public void incrementSlidePos(int inc) {
         for(int i = 0; i < targets.length; i++) {
-            if(targets[i] == slidesTarget) {
+            if(targets[i] >= slidesTarget) {
                 slidesTarget = targets[Range.clip((i+inc), 0, targets.length-1)];
                 break;
             }
@@ -115,6 +117,14 @@ public class Outtake extends Subsystem {
         }
     }
 
+    public void setManualSlidePower(double power) {
+        if(Math.abs(power) < 0.05 || (power < 0 && pos < targets[1])) {
+            this.manualPower = 0;
+            return;
+        }
+        this.manualPower = power;
+    }
+
 
     public void update() {
 
@@ -125,7 +135,7 @@ public class Outtake extends Subsystem {
         }
 
 
-        int pos = -slideMotorR.getCurrentPosition();
+        pos = -slideMotorR.getCurrentPosition();
         double error = slidesTarget - pos;
 
         double speed = (double)(error-lastError)/(double)(t-lastTime);
@@ -141,13 +151,21 @@ public class Outtake extends Subsystem {
         tel.addData("pos", pos);
         tel.update();
 
-        double power = Range.clip(error*slideP + errorSum*slideI + +speed*slideD + slideF,
-                -maxDownSpeed, 1);
+
+        double power;
+        if(Math.abs(manualPower) > 0.05) {
+            power = Range.clip(manualPower + slideF, -1, 1);
+            slidesTarget = pos;
+        } else {
+            power = Range.clip(error*slideP + errorSum*slideI + +speed*slideD + slideF,
+                    -maxDownSpeed, 1);
+        }
+
 
         slideMotorL.setPower(power);
         slideMotorR.setPower(power);
 
-        setArm(pos > pivotHeight && slidesTarget > pivotHeight);
+        setArm(pos > pivotHeight && (slidesTarget > pivotHeight || manualPower > 0));
 
         lastTime = t;
     }

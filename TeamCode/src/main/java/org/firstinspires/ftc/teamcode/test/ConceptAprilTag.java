@@ -121,10 +121,7 @@ public class ConceptAprilTag extends LinearOpMode {
             // == CAMERA CALIBRATION ==
             // If you do not manually specify calibration parameters, the SDK will attempt
             // to load a predefined calibration for your camera.
-//            .setLensIntrinsics(578.272, 578.272, 402.145, 221.506)
-
-            // ... these parameters are fx, fy, cx, cy.
-
+            .setLensIntrinsics(903.79, 903.79, 699.758, 372.872)
             .build();
 
         // Create the vision portal by using a builder.
@@ -132,13 +129,13 @@ public class ConceptAprilTag extends LinearOpMode {
 
         // Set the camera (webcam vs. built-in RC phone camera).
         if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "tagCam"));
+            builder.setCamera(hardwareMap.get(WebcamName.class, "atagCam"));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
 
         // Choose a camera resolution. Not all cameras support all resolutions.
-        builder.setCameraResolution(new Size(640, 480));
+        builder.setCameraResolution(new Size(1280, 720));
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
         builder.enableLiveView(true);

@@ -1,19 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.arcrobotics.ftclib.gamepad.ButtonReader;
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 import org.centennialrobotics.Robot;
-import org.centennialrobotics.subsystems.Intake;
 import org.centennialrobotics.subsystems.Outtake;
 
+@Config
 @Photon
 @TeleOp
 public class MainTeleOp extends LinearOpMode {
+
+    public static double intakeInMax = 0.65;
+    public static double intakeOutMax = 0.5;
 
     public void runOpMode() throws InterruptedException {
 
@@ -39,8 +43,15 @@ public class MainTeleOp extends LinearOpMode {
             );
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                robot.drivetrain.mult *= -1;
+                robot.drivetrain.mult = 1;
             }
+
+            if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                robot.drivetrain.mult = -1;
+            }
+
+
+
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
                 robot.drivetrain.mult *= 0.4;
@@ -51,11 +62,17 @@ public class MainTeleOp extends LinearOpMode {
 
 //            robot.intake.setHeight(toolPad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
-            if(toolPad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                robot.intake.setHeight(5);
+            if(toolPad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                robot.intake.incHeight(2);
             }
-            if(toolPad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                robot.intake.incHeight(-1);
+            if(toolPad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                robot.intake.incHeight(-2);
+            }
+
+            if(robot.outtake.slidesTarget != robot.outtake.targets[0]) {
+                robot.outtake.setManualSlidePower(toolPad.getLeftY()*.2);
+            } else {
+                robot.outtake.setManualSlidePower(0);
             }
 
 //            robot.outtake.setArm(toolPad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
@@ -64,7 +81,19 @@ public class MainTeleOp extends LinearOpMode {
 //                newPower = robot.intake.cycleNoodles();
 //            }
 
-            robot.intake.setNoodlePower(toolPad.getLeftY()*.65);
+            double intakePower = -toolPad.getRightY();
+
+
+            if(intakePower < 0) {
+                intakePower *= intakeOutMax;
+            } else {
+                intakePower *= intakeInMax;
+            }
+
+//            if(robot.outtake.pos > 10)
+//                intakePower = Range.clip(intakePower, -1, 0);
+
+            robot.intake.setNoodlePower(intakePower);
 
 
             if(toolPad.isDown(GamepadKeys.Button.B)) {
@@ -81,16 +110,16 @@ public class MainTeleOp extends LinearOpMode {
 //            }
 
 
-            if(toolPad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            if(toolPad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 robot.outtake.incrementSlidePos(1);
             }
-            if(toolPad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            if(toolPad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
                 robot.outtake.retractSlides();
             }
 
             if(gamepad2.y) {
                 robot.climber.up();
-                robot.climber.setLauncherLift(true);
+//                robot.climber.setLauncherLift(true);
             }
 
             if(gamepad2.x) {
@@ -103,12 +132,16 @@ public class MainTeleOp extends LinearOpMode {
 
             if(gamepad2.a) {
                 robot.climber.down();
-                robot.climber.setLauncherLift(false);
+//                robot.climber.setLauncherLift(false);
+            }
+
+            if(drivePad.wasJustPressed(GamepadKeys.Button.A)) {
+                robot.climber.setLauncherLift(!robot.climber.launcherLifted);
             }
 
 
 
-            if(gamepad2.left_stick_button && gamepad2.right_stick_button) {
+            if(gamepad1.left_stick_button && gamepad1.right_stick_button) {
                 robot.climber.launchPlane();
             }
 

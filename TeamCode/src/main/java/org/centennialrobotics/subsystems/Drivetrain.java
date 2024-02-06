@@ -50,9 +50,9 @@ public class Drivetrain extends Subsystem {
 
         drivebase.setWeightedDrivePower(
                 new Pose2d(
-                        mult*forward,
-                        -strafe*mult,
-                        -turn
+                        mult*Math.pow(forward, 1),
+                        Math.pow(-strafe, 1)*mult,
+                        Math.pow(-turn, 1)
                 )
         );
 

@@ -17,21 +17,24 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 @TeleOp
 public class DrivetrainPIDTest extends LinearOpMode {
 
-    public static double transP = 0;
-    public static double transI = 0;
+    public static double transP = 0.1;
+    public static double transI = 0.05;
     public static double transD = 0;
-    public static double trans_iMax = 999999999;
+    public static double trans_iMax = .3;
     public static double trans_dMax = 999999999;
     public static double trans_filterGain = 0;
 
-    public static double headP = 0;
-    public static double headI = 0;
-    public static double headD = 0;
-    public static double head_iMax = 999999999;
+    public static double headP = 2;
+    public static double headI = 0.2;
+    public static double headD = 1000;
+    public static double head_iMax = .2;
     public static double head_dMax = 999999999;
-    public static double head_filterGain = 0;
+    public static double head_filterGain = 0.7;
 
-    public static Pose2d target = new Pose2d(0, 0, 0);
+    public static double targetX = 0;
+    public static double targetY = 0;
+    public static double targetH = 0;
+//    public static Pose2d target = new Pose2d(0, 0, 0);
 
 
 
@@ -56,17 +59,14 @@ public class DrivetrainPIDTest extends LinearOpMode {
         while (opModeIsActive()) {
             drive.update();
             Pose2d currPose = drive.getPoseEstimate();
-
-            telemetry.addData("x", currPose.getX());
-            telemetry.addData("y", currPose.getY());
-            telemetry.addData("heading", currPose.getHeading());
+            Pose2d target = new Pose2d(targetX, targetY, targetH);
 
             double x = xPID.calculate(target.getX(), currPose.getX());
             double y = yPID.calculate(target.getY(), currPose.getY());
             double h = hPID.calculate(target.getHeading(), currPose.getHeading());
 
-            double xR = x * Math.cos(currPose.getHeading()) - y * Math.sin(currPose.getHeading());
-            double yR = x * Math.sin(currPose.getHeading()) + y * Math.cos(currPose.getHeading());
+            double xR = x * Math.cos(-currPose.getHeading()) - y * Math.sin(-currPose.getHeading());
+            double yR = x * Math.sin(-currPose.getHeading()) + y * Math.cos(-currPose.getHeading());
 
             Pose2d power = new Pose2d(xR, yR, h);
             drive.setWeightedDrivePower(power);

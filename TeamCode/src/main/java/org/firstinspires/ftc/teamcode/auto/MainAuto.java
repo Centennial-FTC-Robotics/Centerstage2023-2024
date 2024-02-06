@@ -38,10 +38,10 @@ public class MainAuto extends LinearOpMode {
         intake.init(this);
         intake.setHeight(Intake.liftLow);
 
-        Servo armBottom = hardwareMap.get(Servo.class, "bottomHangServo");
-        Servo armTop = hardwareMap.get(Servo.class, "topHangServo");
-        armBottom.setPosition(0.5);
-        armTop.setPosition(0.5);
+//        Servo armBottom = hardwareMap.get(Servo.class, "bottomHangServo");
+//        Servo armTop = hardwareMap.get(Servo.class, "topHangServo");
+//        armBottom.setPosition(0.5);
+//        armTop.setPosition(0.5);
 
         Globals.Alliance team = new CRMenu<>(
                 Globals.Alliance.BLUE, Globals.Alliance.RED, null, null).get(this);
@@ -54,7 +54,7 @@ public class MainAuto extends LinearOpMode {
         String path = null;
         if(startLoc == Globals.StartLoc.FRONTSTAGE) {
 
-            path = new CRMenu<>("1+0", "2+5", null, null).get(this);
+            path = new CRMenu<>("1+0", "2+1", "2+3", "2+5").get(this);
 
         } else if(startLoc == Globals.StartLoc.BACKSTAGE){
 
@@ -62,12 +62,14 @@ public class MainAuto extends LinearOpMode {
 
         }
 
+        boolean inner = new CRMenu<>(true, false, null, null).get(this);
+
 
         TrajectorySequence ts = null;
         while(opModeInInit()) {
             ElementProcessor.PropPositions propPos = cam.detectElement();
 
-            ts =getPath(team, startLoc, propPos, path);
+            ts =getPath(team, startLoc, propPos, inner, path);
 
             drive.setPoseEstimate(ts.start());
 
@@ -76,8 +78,8 @@ public class MainAuto extends LinearOpMode {
         }
 
         waitForStart();
-        armBottom.setPosition(.13);
-        armTop.setPosition(1);
+//        armBottom.setPosition(.13);
+//        armTop.setPosition(1);
         drive.followTrajectorySequenceAsync(ts);
 
         double lastFrame = 0;
@@ -97,27 +99,50 @@ public class MainAuto extends LinearOpMode {
             Globals.Alliance team,
             Globals.StartLoc startLoc,
             ElementProcessor.PropPositions propPos,
+            boolean inner,
             String path) {
 
         if(startLoc == Globals.StartLoc.FRONTSTAGE) {
-            if(path.equals("2+5")) {
+            if(path.equals("2+3")) {
                 return CRTrajSeqBuilder.init(
                                 drive, team, startLoc)
                         .loadSubsystems(intake, outtake)
-                        .purpleDepositFrontstage(propPos, true)
-                        .scoreYellowFrontstage(propPos)
-                        .returnToIntakeStack(4)
-                        .scoreFromStack()
-                        .returnToIntakeStack(2)
-                        .scoreFromStack()
+                        .wait(8.)
+                        .purpleDepositFrontstage(propPos, true, inner)
+                        .scoreYellowFrontstage(propPos, inner)
+                        .returnToIntakeStack(4, inner)
+                        .scoreFromStack(inner)
+                        .park(false)
+                        .build();
+            } else if(path.equals("2+5")) {
+                return CRTrajSeqBuilder.init(
+                                drive, team, startLoc)
+                        .loadSubsystems(intake, outtake)
+                        .purpleDepositFrontstage(propPos, true, inner)
+                        .scoreYellowFrontstage(propPos, inner)
+                        .returnToIntakeStack(4, inner)
+                        .scoreFromStack(inner)
+                        .returnToIntakeStack(2, inner)
+                        .scoreFromStack(inner)
                         .park(false)
                         .build();
             } else if(path.equals("1+0")) {
                 return CRTrajSeqBuilder.init(
                                 drive, team, startLoc)
                         .loadSubsystems(intake, outtake)
-                        .purpleDepositFrontstage(propPos, false)
+                        .purpleDepositFrontstage(propPos, false, inner)
+//                        .park(false)
                         .build();
+            } else if(path.equals("2+1")) {
+                return CRTrajSeqBuilder.init(
+                        drive, team, startLoc)
+                        .loadSubsystems(intake, outtake)
+                        .wait(14.)
+                        .purpleDepositFrontstage(propPos, true, inner)
+                        .scoreYellowFrontstage(propPos, inner)
+                        .park(false)
+                        .build();
+
             }
         } else if(startLoc == Globals.StartLoc.BACKSTAGE) {
 
@@ -132,8 +157,8 @@ public class MainAuto extends LinearOpMode {
                 return CRTrajSeqBuilder.init(drive, team, startLoc)
                         .loadSubsystems(intake, outtake)
                         .purpleYellowBackstage(propPos)
-                        .returnToIntakeStack(5)
-                        .scoreFromStack()
+                        .returnToIntakeStack(5, inner)
+                        .scoreFromStack(inner)
                         .park(false)
                         .build();
 
@@ -141,10 +166,10 @@ public class MainAuto extends LinearOpMode {
                 return CRTrajSeqBuilder.init(drive, team, startLoc)
                         .loadSubsystems(intake, outtake)
                         .purpleYellowBackstage(propPos)
-                        .returnToIntakeStack(5)
-                        .scoreFromStack()
-                        .returnToIntakeStack(3)
-                        .scoreFromStack()
+                        .returnToIntakeStack(5, inner)
+                        .scoreFromStack(inner)
+                        .returnToIntakeStack(3, inner)
+                        .scoreFromStack(inner)
                         .park(false)
                         .build();
             }

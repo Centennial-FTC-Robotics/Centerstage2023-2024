@@ -18,8 +18,8 @@ public class Camera extends Subsystem {
     Scalar blueH = new Scalar(120, 255, 255);
 
 
-    Scalar redL = new Scalar(0, 155, 0);
-    Scalar redH = new Scalar(35, 255, 255);
+    Scalar redL = new Scalar(0, 75, 0);
+    Scalar redH = new Scalar(187, 255, 255);
 
     Scalar low;
     Scalar high;

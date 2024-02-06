@@ -2,6 +2,7 @@ package org.centennialrobotics.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -20,7 +21,7 @@ public class Intake extends Subsystem {
     public static double liftMid = .5;
     public static double liftHigh = 0;
 
-    public double[] heights = {0.64, 0.58, 0.52, 0.465, 0.4, 0};
+    public double[] heights = {0.63, 0.58, 0.52, 0.465, 0.4, 0};
     public int currentHeight = 0;
 
     // high: 0
@@ -35,6 +36,7 @@ public class Intake extends Subsystem {
     public DcMotorEx noodleMotor;
     // Left/Right when you consider slides to be front of robot
     public Servo intakeLift;
+    public CRServo roller;
 
     public void init(LinearOpMode opmode) {
 
@@ -46,6 +48,8 @@ public class Intake extends Subsystem {
 
         intakeLift = opmode.hardwareMap.get(Servo.class, "leftIntake");
         intakeLift.setDirection(Servo.Direction.REVERSE);
+
+        roller = opmode.hardwareMap.get(CRServo.class, "intakeRoller");
 
         setHeight(currentHeight);
 
@@ -60,8 +64,8 @@ public class Intake extends Subsystem {
     }
 
     public void setNoodlePower(double power) {
-
         noodleMotor.setPower(Range.clip(power, -1, 1));
+        roller.setPower(Math.signum(power));
     }
 
     public int cycleNoodles() {

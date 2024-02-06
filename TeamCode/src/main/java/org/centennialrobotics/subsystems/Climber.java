@@ -14,8 +14,8 @@ import org.centennialrobotics.util.Globals;
 @Config
 public class Climber extends Subsystem {
 
-    public static double hangUp = 0.35;
-    public static double hangLow = 0;
+    public static double hangUp = 1;
+    public static double hangLow = 0.19;
 
     public static double launcherUp = 0.35;
 
@@ -80,8 +80,8 @@ public class Climber extends Subsystem {
         armBottom.getController().pwmEnable();
         armTop.getController().pwmEnable();
 
-        armBottom.setPosition(.13);
-        armTop.setPosition(1);
+        armBottom.setPosition(hangLow);
+        armTop.setPosition(hangUp);
     }
 
     public void left() {
