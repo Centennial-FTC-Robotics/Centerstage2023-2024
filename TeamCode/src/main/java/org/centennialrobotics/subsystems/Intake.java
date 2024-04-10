@@ -21,7 +21,13 @@ public class Intake extends Subsystem {
     public static double liftMid = .5;
     public static double liftHigh = 0;
 
-    public double[] heights = {0.63, 0.58, 0.52, 0.465, 0.4, 0};
+    public static double bumperDownL = 0.125;
+    public static double bumperUpL = 0.7;
+    public static double bumperDownR = 0.85;
+    public static double bumperUpR = 0.5;
+
+//    public double[] heights = {0.63, 0.58, 0.52, 0.465, 0.4, 0};
+    public double[] heights = {0.22, 0.3, 0.38, 0.48, 0.57, 0.75};
     public int currentHeight = 0;
 
     // high: 0
@@ -36,6 +42,8 @@ public class Intake extends Subsystem {
     public DcMotorEx noodleMotor;
     // Left/Right when you consider slides to be front of robot
     public Servo intakeLift;
+    public Servo bumperL;
+    public Servo bumperR;
     public CRServo roller;
 
     public void init(LinearOpMode opmode) {
@@ -53,9 +61,21 @@ public class Intake extends Subsystem {
 
         setHeight(currentHeight);
 
+        bumperL = opmode.hardwareMap.get(Servo.class, "leftBlocker");
+        bumperR = opmode.hardwareMap.get(Servo.class, "rightBlocker");
+        setBumperUp(true);
+
     }
 
-
+    public void setBumperUp(boolean up) {
+        if(up) {
+            bumperL.setPosition(bumperUpL);
+            bumperR.setPosition(bumperUpR);
+        } else {
+            bumperL.setPosition(bumperDownL);
+            bumperR.setPosition(bumperDownR);
+        }
+    }
 
     public void expelOne() throws InterruptedException {
         noodleMotor.setPower(-0.17);

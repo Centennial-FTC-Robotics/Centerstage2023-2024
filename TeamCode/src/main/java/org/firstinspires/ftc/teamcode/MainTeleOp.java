@@ -18,6 +18,7 @@ public class MainTeleOp extends LinearOpMode {
 
     public static double intakeInMax = 0.65;
     public static double intakeOutMax = 0.5;
+    public static double testIntakeHeight = 0;
 
     public void runOpMode() throws InterruptedException {
 
@@ -63,11 +64,14 @@ public class MainTeleOp extends LinearOpMode {
 //            robot.intake.setHeight(toolPad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
             if(toolPad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                robot.intake.incHeight(2);
+                robot.intake.incHeight(1);
+//                robot.intake.setHeight(testIntakeHeight);
             }
             if(toolPad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-                robot.intake.incHeight(-2);
+                robot.intake.incHeight(-1);
             }
+
+            robot.intake.setBumperUp(robot.intake.currentHeight == 0);
 
             if(robot.outtake.slidesTarget != robot.outtake.targets[0]) {
                 robot.outtake.setManualSlidePower(toolPad.getLeftY()*.2);
@@ -83,6 +87,9 @@ public class MainTeleOp extends LinearOpMode {
 
             double intakePower = -toolPad.getRightY();
 
+            if(Math.abs(intakePower) < 0.1) {
+                intakePower = 0;
+            }
 
             if(intakePower < 0) {
                 intakePower *= intakeOutMax;
