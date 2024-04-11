@@ -7,7 +7,7 @@ import org.centennialrobotics.Subsystem;
 
 public class IMU extends Subsystem {
 
-    public RevIMU revIMU;
+    public static RevIMU revIMU;
 
     public void init(LinearOpMode opmode) {
 

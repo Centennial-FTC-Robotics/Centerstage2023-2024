@@ -7,6 +7,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.centennialrobotics.subsystems.IMU;
 import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 
 import java.util.Arrays;
@@ -40,6 +42,11 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
     private List<Integer> lastEncPositions, lastEncVels;
+
+    public int lastImuRead = 0;
+    public static int imuReadPeriod = 300;
+
+    public Pose2d offset = new Pose2d(0,0,0);
 
     public StandardTrackingWheelLocalizer(HardwareMap hardwareMap, List<Integer> lastTrackingEncPositions, List<Integer> lastTrackingEncVels) {
         super(Arrays.asList(
@@ -101,4 +108,21 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
                 encoderTicksToInches(frontVel) * Y_MULTIPLIER
         );
     }
+
+    public void update() {
+        super.update();
+        if(lastImuRead <= 0) {
+            Pose2d curr = getPoseEstimate();
+            Pose2d actual = new Pose2d(curr.getX(), curr.getY(), -IMU.revIMU.getHeading()*Math.PI/180.);
+            offset = actual.minus(curr);
+            lastImuRead = imuReadPeriod;
+        }
+        lastImuRead--;
+    }
+
+    public Pose2d getPoseEstimate() {
+        return super.getPoseEstimate().plus(offset);
+    }
+
+
 }

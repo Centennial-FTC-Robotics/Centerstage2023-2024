@@ -352,6 +352,7 @@ public class CRTrajSeqBuilder {
                             outtake.incrementSlidePos(3);
                         }
                         intake.setNoodlePower(0);
+                        intake.setBumperUp(true);
                     })
                     .splineTo(new Vector2d(BACKDROP_DISTANCE, mult*backdropY), Math.toRadians(0.00))
                     .addTemporalMarker(() -> {
@@ -399,6 +400,7 @@ public class CRTrajSeqBuilder {
                     })
                     .UNSTABLE_addTemporalMarkerOffset(2, () -> {
                         intake.setHeight(oneHigherIntakeHeight);
+                        intake.setBumperUp(false);
                         intake.setNoodlePower(0.8);
                         outtake.setWheel(-1* Outtake.wheelOutDir);
                     })

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.centennialrobotics.processors.ElementProcessor;
 import org.centennialrobotics.subsystems.Camera;
+import org.centennialrobotics.subsystems.IMU;
 import org.centennialrobotics.subsystems.Intake;
 import org.centennialrobotics.subsystems.Outtake;
 import org.centennialrobotics.util.CRMenu;
@@ -23,6 +24,8 @@ public class MainAuto extends LinearOpMode {
     Outtake outtake;
     Intake intake;
 
+    IMU imu;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -33,10 +36,12 @@ public class MainAuto extends LinearOpMode {
         outtake = new Outtake();
         intake = new Intake();
         Camera cam = new Camera();
+        imu = new IMU();
+        imu.init(this);
 
         outtake.init(this);
         intake.init(this);
-        intake.setHeight(Intake.liftLow);
+        intake.setHeight(0);
 
 //        Servo armBottom = hardwareMap.get(Servo.class, "bottomHangServo");
 //        Servo armTop = hardwareMap.get(Servo.class, "topHangServo");
@@ -80,6 +85,7 @@ public class MainAuto extends LinearOpMode {
         waitForStart();
 //        armBottom.setPosition(.13);
 //        armTop.setPosition(1);
+        imu.init(this);
         drive.followTrajectorySequenceAsync(ts);
 
         double lastFrame = 0;
