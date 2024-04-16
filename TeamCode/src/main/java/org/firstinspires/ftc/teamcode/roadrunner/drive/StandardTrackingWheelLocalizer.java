@@ -38,6 +38,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
     public static double X_MULTIPLIER = .977178; // Multiplier in the X direction
     public static double Y_MULTIPLIER = .977178; // Multiplier in the Y direction
+    public static double HEAD_OFFSET_MULT = 1;
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
@@ -85,7 +86,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
         return Arrays.asList(
                 encoderTicksToInches(leftPos) * X_MULTIPLIER,
-                encoderTicksToInches(rightPos) * X_MULTIPLIER,
+                encoderTicksToInches(rightPos) * X_MULTIPLIER * HEAD_OFFSET_MULT,
                 encoderTicksToInches(frontPos) * Y_MULTIPLIER
         );
     }
@@ -104,25 +105,25 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
         return Arrays.asList(
                 encoderTicksToInches(leftVel) * X_MULTIPLIER,
-                encoderTicksToInches(rightVel) * X_MULTIPLIER,
+                encoderTicksToInches(rightVel) * X_MULTIPLIER * HEAD_OFFSET_MULT,
                 encoderTicksToInches(frontVel) * Y_MULTIPLIER
         );
     }
 
-    public void update() {
-        super.update();
-        if(lastImuRead <= 0) {
-            Pose2d curr = getPoseEstimate();
-            Pose2d actual = new Pose2d(curr.getX(), curr.getY(), -IMU.revIMU.getHeading()*Math.PI/180.);
-            offset = actual.minus(curr);
-            lastImuRead = imuReadPeriod;
-        }
-        lastImuRead--;
-    }
+//    public void update() {
+//        super.update();
+//        if(lastImuRead <= 0) {
+//            Pose2d curr = getPoseEstimate();
+//            Pose2d actual = new Pose2d(curr.getX(), curr.getY(), -IMU.revIMU.getHeading()*Math.PI/180.);
+//            offset = actual.minus(curr);
+//            lastImuRead = imuReadPeriod;
+//        }
+//        lastImuRead--;
+//    }
 
-    public Pose2d getPoseEstimate() {
-        return super.getPoseEstimate().plus(offset);
-    }
+//    public Pose2d getPoseEstimate() {
+//        return super.getPoseEstimate().plus(offset);
+//    }
 
 
 }

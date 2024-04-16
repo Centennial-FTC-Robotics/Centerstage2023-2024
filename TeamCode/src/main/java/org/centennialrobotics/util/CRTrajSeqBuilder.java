@@ -23,9 +23,9 @@ public class CRTrajSeqBuilder {
         OUTER
     }
 
-    public static double BACKDROP_INNER = 29.4;
+    public static double BACKDROP_INNER = 27;
     public static double BACKDROP_CENTER = 35.4;
-    public static double BACKDROP_OUTER = 41.4;
+    public static double BACKDROP_OUTER = 43.7;
     public static double BACKDROP_DISTANCE = 53.5;
     public static double STACK_X = -59.5;
     public static double STACK_Y = 11.5;
@@ -120,32 +120,32 @@ public class CRTrajSeqBuilder {
                 if(!inner){
                     seq.setReversed(true)
                             .splineToConstantHeading(new Vector2d(-35.2, 34.76*mult), Math.toRadians(270.00*mult))
-                            .addTemporalMarker(() -> {
-                                intake.setNoodlePower(0.8);
-                                outtake.setWheel(-1* Outtake.wheelOutDir);
-                            })
+//                            .addTemporalMarker(() -> {
+//                                intake.setNoodlePower(0.8);
+//                                outtake.setWheel(-1* Outtake.wheelOutDir);
+//                            })
                             .splineTo(new Vector2d(-42.69, 12.54*mult), Math.toRadians(220.60*mult))
                             .splineTo(new Vector2d(STACK_X-2, mult*targetStackY), Math.toRadians(180.00*mult))
-                            .addTemporalMarker(() -> {
-                                intake.setNoodlePower(0.8);
-                                outtake.setWheel(-1* Outtake.wheelOutDir);
-                            })
-                            .addTemporalMarker(() -> {
-                                intake.setHeight(4);
-                            })
+//                            .addTemporalMarker(() -> {
+//                                intake.setNoodlePower(0.8);
+//                                outtake.setWheel(-1* Outtake.wheelOutDir);
+//                            })
+//                            .addTemporalMarker(() -> {
+//                                intake.setHeight(4);
+//                            })
                             .waitSeconds(0.8);
                 } else {
                     seq.setReversed(true)
 
                             .splineToConstantHeading(new Vector2d(-53, 50*mult), Math.toRadians(-135*mult))
                             .lineToLinearHeading(new Pose2d(STACK_X-2, mult*targetStackY, Math.toRadians(180*mult)))
-                            .addTemporalMarker(() -> {
-                                intake.setNoodlePower(0.8);
-                                outtake.setWheel(-1* Outtake.wheelOutDir);
-                            })
-                            .addTemporalMarker(() -> {
-                                intake.setHeight(4);
-                            })
+//                            .addTemporalMarker(() -> {
+//                                intake.setNoodlePower(0.8);
+//                                outtake.setWheel(-1* Outtake.wheelOutDir);
+//                            })
+//                            .addTemporalMarker(() -> {
+//                                intake.setHeight(4);
+//                            })
                             .waitSeconds(0.7);
                 }
 
@@ -201,16 +201,16 @@ public class CRTrajSeqBuilder {
             if(prepStack) {
                 seq.setReversed(true)
                         .UNSTABLE_addTemporalMarkerOffset(2, () -> {
-                            intake.setNoodlePower(0.8);
-                            outtake.setWheel(-1* Outtake.wheelOutDir);
+//                            intake.setNoodlePower(0.8);
+//                            outtake.setWheel(-1* Outtake.wheelOutDir);
                         })
-                        .waitSeconds(0.5)
+                        .waitSeconds(0.1) //was 0.5
                         .splineToLinearHeading(new Pose2d(STACK_X-2, mult*targetStackY,
-                                Math.toRadians(mult*180.00)), Math.toRadians(mult*180))
-                        .addTemporalMarker(() -> {
-                            intake.setHeight(4);
-                        })
-                        .waitSeconds(0.3);;
+                                Math.toRadians(mult*180.00)), Math.toRadians(mult*180));
+//                        .addTemporalMarker(() -> {
+//                            intake.setHeight(4);
+//                        })
+//                        .waitSeconds(0.3);;
 
             }
 
@@ -249,7 +249,7 @@ public class CRTrajSeqBuilder {
                     })
                     .splineTo(new Vector2d(25.00, STACK_Y*mult), Math.toRadians(0.00))
                     .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                        outtake.incrementSlidePos(2);
+                        outtake.incrementSlidePos(1);
                     })
                     .splineTo(new Vector2d(BACKDROP_DISTANCE, targetY), Math.toRadians(0.00))
                     .addTemporalMarker(() -> {
@@ -271,7 +271,7 @@ public class CRTrajSeqBuilder {
                     .splineTo(new Vector2d(-40, 58.75*mult), Math.toRadians(0.00))
                     .splineTo(new Vector2d(25, 58.75*mult), 0)
                     .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                        outtake.incrementSlidePos(2);
+                        outtake.incrementSlidePos(1);
                     })
                     .splineTo(new Vector2d(BACKDROP_DISTANCE, targetY), Math.toRadians(0.00))
                     .addTemporalMarker(() -> {
