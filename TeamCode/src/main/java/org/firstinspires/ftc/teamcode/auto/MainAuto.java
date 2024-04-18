@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.centennialrobotics.processors.ElementProcessor;
 import org.centennialrobotics.subsystems.Camera;
+import org.centennialrobotics.subsystems.Climber;
 import org.centennialrobotics.subsystems.IMU;
 import org.centennialrobotics.subsystems.Intake;
 import org.centennialrobotics.subsystems.Outtake;
@@ -25,6 +26,7 @@ public class MainAuto extends LinearOpMode {
     Intake intake;
 
     IMU imu;
+    Climber climber;
 
 
     @Override
@@ -37,10 +39,13 @@ public class MainAuto extends LinearOpMode {
         intake = new Intake();
         Camera cam = new Camera();
         imu = new IMU();
+        climber = new Climber();
+
         imu.init(this);
 
         outtake.init(this);
         intake.init(this);
+        climber.init(this);
         intake.setHeight(0);
 
 //        Servo armBottom = hardwareMap.get(Servo.class, "bottomHangServo");

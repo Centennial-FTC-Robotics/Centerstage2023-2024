@@ -123,24 +123,14 @@ public class MainTeleOp extends LinearOpMode {
             if(toolPad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
                 robot.outtake.retractSlides();
             }
-
+            if(gamepad2.left_stick_button && gamepad2.right_stick_button) {
+                robot.climber.setHangLock(false);
+            }
             if(gamepad2.y) {
-                robot.climber.up();
-//                robot.climber.setLauncherLift(true);
+                robot.climber.setHangLock(true);
             }
 
-            if(gamepad2.x) {
-                robot.climber.left();
-            }
 
-//            if(gamepad1.dpad_right) {
-//                robot.climber.right();
-//            }
-
-            if(gamepad2.a) {
-                robot.climber.down();
-//                robot.climber.setLauncherLift(false);
-            }
 
             if(drivePad.wasJustPressed(GamepadKeys.Button.A)) {
                 robot.climber.setLauncherLift(!robot.climber.launcherLifted);
@@ -163,9 +153,6 @@ public class MainTeleOp extends LinearOpMode {
 //            }
 
             double hangMotorPower = (double)(gamepad2.right_trigger - gamepad2.left_trigger);
-            if(hangMotorPower > 0) {
-                robot.climber.setServoEnabled(false);
-            }
             robot.climber.hangMotor.setPower(hangMotorPower);
 
         }

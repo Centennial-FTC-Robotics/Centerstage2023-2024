@@ -27,7 +27,7 @@ public class Outtake extends Subsystem {
     public static double pivotHeight = 150;
 
     public static double pivotFlat = 0.42;
-    public static double pivotUp = 0.7;
+    public static double pivotUp = 0.73;
 
     public static double maxDownSpeed = 0.35;
 
