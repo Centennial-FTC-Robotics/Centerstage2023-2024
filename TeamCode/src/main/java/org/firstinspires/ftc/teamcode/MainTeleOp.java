@@ -64,11 +64,11 @@ public class MainTeleOp extends LinearOpMode {
 //            robot.intake.setHeight(toolPad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
             if(toolPad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                robot.intake.incHeight(1);
+                robot.intake.incHeight(2);
 //                robot.intake.setHeight(testIntakeHeight);
             }
             if(toolPad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-                robot.intake.incHeight(-1);
+                robot.intake.incHeight(-2);
             }
 
             robot.intake.setBumperUp(robot.intake.currentHeight == 0);

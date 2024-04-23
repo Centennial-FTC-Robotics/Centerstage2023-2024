@@ -27,7 +27,7 @@ public class Intake extends Subsystem {
     public static double bumperUpR = 0.5;
 
 //    public double[] heights = {0.63, 0.58, 0.52, 0.465, 0.4, 0};
-    public double[] heights = {0.27, 0.35, 0.45, 0.54, 0.64, 0.9};
+    public double[] heights = {0.24, 0.35, 0.45, 0.54, 0.64, 0.9};
     public int currentHeight = 0;
 
     // high: 0

@@ -15,7 +15,7 @@ import org.centennialrobotics.util.Globals;
 public class Climber extends Subsystem {
 
     public static double hangUnlocked = 0.6;
-    public static double hangLocked = 0.05;
+    public static double hangLocked = 0.00;
 
     public static double launcherUp = 0.35;
 

@@ -23,8 +23,8 @@ public class CRTrajSeqBuilder {
         OUTER
     }
 
-    public static double BACKDROP_INNER = 28.5;
-    public static double BACKDROP_CENTER = 36;
+    public static double BACKDROP_INNER = 30;
+    public static double BACKDROP_CENTER = 37;
     public static double BACKDROP_OUTER = 40;
     public static double BACKDROP_DISTANCE = 55.5;
     public static double STACK_X = -59.5;
